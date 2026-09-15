@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal del Artista Local — Partido de Magdalena</title>
+<meta name="description" content="Directorio cultural del Partido de Magdalena: músicos, bandas, fotógrafos, artistas plásticos, poetas, escritores y artesanos de la comunidad.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0B2436;
+    --paper:#F0F7F5;
+    --paper-2:#E1F0EA;
+    --card:#FFFFFF;
+    --blue:#1868C4;
+    --blue-deep:#0E4C93;
+    --green:#17A876;
+    --green-deep:#0E7F58;
+    --line:#D8E7E1;
+    --line-soft:#E7F1EC;
+    --white:#FFFFFF;
+    --grad: linear-gradient(135deg, var(--blue) 0%, var(--green) 100%);
+    --shadow-sm: 0 2px 10px rgba(11,36,54,0.07);
+    --shadow-md: 0 14px 30px rgba(11,36,54,0.14);
+    --radius: 18px;
+    --radius-sm: 12px;
+    --radius-pill: 999px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,h4{
+    font-family:'Sora',sans-serif;
+    margin:0;
+    color:var(--ink);
+    font-weight:700;
+    letter-spacing:-0.02em;
+  }
+  a{color:inherit;text-decoration:none;}
+  button{font-family:inherit;cursor:pointer;}
+  img{max-width:100%;display:block;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px;}
+  :focus-visible{outline:2px solid var(--blue);outline-offset:2px;}
+
+  /* ---------- NAV ---------- */
+  header.site-nav{
+    position:sticky;top:0;z-index:50;
+    background:rgba(240,247,245,0.85);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{
+    max-width:1180px;margin:0 auto;padding:14px 24px;
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+  }
+  .brand{display:flex;align-items:center;gap:10px;}
+  .brand-mark{width:36px;height:36px;flex:none;}
+  .brand-text{font-family:'Sora',sans-serif;font-weight:700;font-size:15px;line-height:1.15;}
+  .brand-text small{display:block;font-family:'Inter',sans-serif;font-weight:600;font-size:10.5px;letter-spacing:.08em;color:var(--green-deep);margin-top:2px;}
+  nav.links{display:flex;align-items:center;gap:26px;}
+  nav.links a{font-size:14px;font-weight:600;color:var(--ink);padding:6px 0;border-bottom:2px solid transparent;}
+  nav.links a.active,nav.links a:hover{border-bottom-color:var(--green);color:var(--blue-deep);}
+  .btn-registrar{
+    background:var(--grad);color:var(--white);padding:10px 20px;border-radius:var(--radius-pill);
+    font-size:13.5px;font-weight:700;white-space:nowrap;box-shadow:var(--shadow-sm);
+    border-bottom:none !important;
+  }
+  .btn-registrar:hover{filter:brightness(1.07);transform:translateY(-1px);}
+  .nav-toggle{display:none;background:none;border:none;font-size:24px;color:var(--ink);padding:4px;}
+
+  /* ---------- HERO ---------- */
+  .hero{padding:64px 0 56px;position:relative;overflow:hidden;}
+  .hero:before{
+    content:'';position:absolute;top:-140px;right:-160px;width:460px;height:460px;border-radius:50%;
+    background:var(--grad);opacity:.14;filter:blur(10px);z-index:0;
+  }
+  .hero-grid{display:grid;grid-template-columns:1.15fr 0.85fr;gap:48px;align-items:center;position:relative;z-index:1;}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;color:var(--blue-deep);margin-bottom:16px;background:var(--white);border:1px solid var(--line);padding:7px 14px;border-radius:var(--radius-pill);}
+  .eyebrow:before{content:'';width:7px;height:7px;border-radius:50%;background:var(--grad);}
+  .hero h1{font-size:46px;line-height:1.08;font-weight:800;letter-spacing:-0.03em;}
+  .hero h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .hero p.lede{font-size:17px;max-width:46ch;color:#3c4a52;margin-top:18px;}
+  .hero-ctas{display:flex;gap:14px;margin-top:30px;flex-wrap:wrap;}
+  .btn-primary{background:var(--grad);color:var(--white);padding:14px 24px;border:none;border-radius:var(--radius-pill);font-weight:700;font-size:14.5px;box-shadow:var(--shadow-sm);}
+  .btn-primary:hover{filter:brightness(1.07);transform:translateY(-1px);}
+  .btn-ghost{background:var(--white);color:var(--ink);padding:14px 24px;border:1.5px solid var(--line);border-radius:var(--radius-pill);font-weight:700;font-size:14.5px;}
+  .btn-ghost:hover{border-color:var(--blue);color:var(--blue-deep);}
+  .hero-mosaic{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;position:relative;z-index:1;}
+  .hero-mosaic img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:var(--radius-sm);box-shadow:var(--shadow-sm);}
+  .hero-mosaic div:nth-child(2){margin-top:22px;}
+  .hero-mosaic div:nth-child(5){margin-top:-22px;}
+  .hero-stats{display:flex;gap:32px;margin-top:34px;padding-top:26px;border-top:1px solid var(--line);}
+  .hero-stats div b{display:block;font-family:'Sora',sans-serif;font-size:26px;color:var(--ink);}
+  .hero-stats div span{font-size:12.5px;color:#5c6a71;}
+
+  /* ---------- SECTION HEADS ---------- */
+  .section{padding:56px 0;}
+  .section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin-bottom:28px;flex-wrap:wrap;}
+  .section-head h2{font-size:28px;}
+  .section-head p{color:#5c6a71;font-size:14.5px;margin-top:6px;max-width:52ch;}
+  .verall{font-size:13.5px;font-weight:700;color:var(--blue-deep);white-space:nowrap;}
+  .verall:hover{color:var(--green-deep);}
+
+  /* ---------- DESTACADOS ---------- */
+  .destacados{background:linear-gradient(135deg,var(--ink) 0%, #0E3B52 60%, var(--blue-deep) 100%);color:var(--white);}
+  .destacados .section-head p{color:#bcd8e6;}
+  .destacados h2{color:var(--white);}
+  .dest-scroll{display:flex;gap:14px;overflow-x:auto;padding-bottom:8px;scrollbar-width:thin;}
+  .dest-card{flex:0 0 128px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);border-radius:var(--radius);padding:12px;text-align:center;transition:transform .18s ease, border-color .18s ease, background .18s ease;}
+  .dest-card:hover{transform:translateY(-3px);border-color:var(--green);background:rgba(255,255,255,0.1);}
+  .dest-card .dc-foto{width:100%;aspect-ratio:1/1;border-radius:calc(var(--radius) - 6px);overflow:hidden;margin-bottom:10px;}
+  .dest-card .dc-foto img{width:100%;height:100%;object-fit:cover;}
+  .dest-card .dc-rubro{font-size:10px;letter-spacing:.03em;color:#8fd6b8;font-weight:700;margin-top:4px;}
+  .dest-card h4{color:var(--white);font-size:13.5px;line-height:1.25;}
+
+  /* ---------- FILTERS ---------- */
+  .filters-bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:30px;}
+  .chip{padding:9px 16px;border:1.5px solid var(--line);border-radius:var(--radius-pill);font-size:13.5px;font-weight:600;background:var(--card);color:var(--ink);}
+  .chip.active{background:var(--grad);border-color:transparent;color:var(--white);}
+  .chip:hover:not(.active){border-color:var(--blue);}
+  .search-box{margin-left:auto;position:relative;min-width:230px;flex:1 1 230px;max-width:340px;}
+  .search-box input{width:100%;padding:11px 14px 11px 38px;border:1.5px solid var(--line);border-radius:var(--radius-pill);font-family:inherit;font-size:14px;background:var(--card);}
+  .search-box input:focus{border-color:var(--blue);}
+  .search-box svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);opacity:.5;}
+
+  /* ---------- GRID / CARDS (botones rápidos) ---------- */
+  .grid-catalogo{display:grid;grid-template-columns:repeat(6,1fr);gap:16px;}
+  .card-artista{
+    background:var(--card);border:1px solid var(--line-soft);border-radius:var(--radius);
+    padding:14px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:2px;
+    transition:box-shadow .18s ease, transform .18s ease, border-color .18s ease;
+  }
+  .card-artista:hover{transform:translateY(-4px);box-shadow:var(--shadow-md);border-color:var(--green);}
+  .card-foto{position:relative;width:100%;aspect-ratio:1/1;overflow:hidden;border-radius:calc(var(--radius) - 6px);background:var(--paper-2);margin-bottom:10px;}
+  .card-foto img{width:100%;height:100%;object-fit:cover;}
+  .card-badge{position:absolute;top:7px;left:7px;background:var(--grad);color:var(--white);font-size:9px;font-weight:700;padding:3px 8px;border-radius:var(--radius-pill);text-transform:uppercase;letter-spacing:.03em;}
+  .card-body h3{font-size:14.5px;line-height:1.25;}
+  .card-rubro{font-size:11px;font-weight:700;color:var(--blue-deep);margin-top:3px;}
+  .empty-state{grid-column:1/-1;text-align:center;padding:60px 20px;color:#5c6a71;}
+  .empty-state h3{margin-bottom:8px;}
+
+  /* ---------- RUBROS PAGE ---------- */
+  .rubros-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;}
+  .rubro-tile{background:var(--card);border:1px solid var(--line-soft);border-radius:var(--radius);padding:24px 20px;text-align:left;transition:border-color .15s ease, transform .15s ease, box-shadow .15s ease;}
+  .rubro-tile:hover{border-color:var(--green);transform:translateY(-2px);box-shadow:var(--shadow-sm);}
+  .rubro-tile .rt-emoji{font-size:28px;}
+  .rubro-tile h3{font-size:17px;margin-top:12px;}
+  .rubro-tile span{font-size:12.5px;color:#5c6a71;display:block;margin-top:4px;}
+
+  /* ---------- PERFIL ---------- */
+  .perfil-back{font-size:13.5px;font-weight:700;color:var(--blue-deep);display:inline-flex;align-items:center;gap:6px;margin-bottom:24px;}
+  .perfil-hero{display:grid;grid-template-columns:280px 1fr;gap:36px;margin-bottom:44px;}
+  .perfil-foto{aspect-ratio:1/1;border-radius:var(--radius);overflow:hidden;background:var(--paper-2);box-shadow:var(--shadow-sm);}
+  .perfil-foto img{width:100%;height:100%;object-fit:cover;}
+  .perfil-info .card-rubro{font-size:12px;margin-bottom:8px;}
+  .perfil-info h1{font-size:34px;}
+  .perfil-info .p-nombreartistico{font-size:15px;color:#5c6a71;margin-top:4px;}
+  .perfil-info .p-loc{font-size:13.5px;color:#5c6a71;margin-top:10px;display:flex;align-items:center;gap:6px;}
+  .perfil-info .p-desc{margin-top:16px;font-size:15.5px;max-width:60ch;color:#334752;}
+  .contacto-botones{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px;}
+  .btn-contacto{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:var(--radius-pill);font-weight:700;font-size:13.5px;color:var(--white);}
+  .btn-wa{background:#22a866;} .btn-wa:hover{background:#1a8a53;}
+  .btn-ig{background:#c2438a;} .btn-ig:hover{background:#a2306f;}
+  .btn-fb{background:var(--blue);} .btn-fb:hover{background:var(--blue-deep);}
+  .btn-ot{background:var(--ink);} .btn-ot:hover{background:#000;}
+  .perfil-section{margin-bottom:40px;}
+  .perfil-section h2{font-size:22px;margin-bottom:6px;}
+  .perfil-section .ps-sub{font-size:13px;color:#5c6a71;margin-bottom:20px;}
+  .bio-text{max-width:70ch;font-size:15.5px;color:#334752;white-space:pre-line;}
+  .trabajos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+  .trabajo-card{background:var(--card);border:1px solid var(--line-soft);border-radius:var(--radius);overflow:hidden;}
+  .trabajo-card img{width:100%;aspect-ratio:16/10;object-fit:cover;background:var(--paper-2);}
+  .trabajo-card .tc-body{padding:12px 14px;}
+  .trabajo-card .tc-tipo{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--green-deep);font-weight:700;}
+  .trabajo-card h4{font-size:14.5px;margin-top:3px;}
+  .trabajo-card p{font-size:12.5px;color:#5c6a71;margin-top:3px;}
+
+  /* ---------- REGISTRO FORM ---------- */
+  .form-shell{max-width:760px;}
+  .form-card{background:var(--card);border:1px solid var(--line-soft);border-radius:var(--radius);padding:36px;}
+  fieldset{border:none;padding:0;margin:0 0 30px;}
+  fieldset legend{font-family:'Sora',sans-serif;font-weight:700;font-size:18px;padding:0;margin-bottom:4px;}
+  fieldset .fs-hint{font-size:13px;color:#5c6a71;margin-bottom:16px;}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+  .field{display:flex;flex-direction:column;gap:6px;}
+  .field.full{grid-column:1/-1;}
+  .field label{font-size:13px;font-weight:700;color:var(--ink);}
+  .field label .opt{font-weight:400;color:#8a969c;}
+  .field input,.field select,.field textarea{
+    font-family:inherit;font-size:14.5px;padding:11px 13px;border:1.5px solid var(--line);border-radius:var(--radius-sm);background:var(--white);width:100%;
+  }
+  .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue);}
+  .field textarea{resize:vertical;min-height:90px;}
+  .form-submit-row{display:flex;align-items:center;gap:16px;margin-top:8px;}
+  .form-msg-ok{background:#e1f5ea;border:1px solid #a9e0c2;color:#0e7f58;padding:16px 20px;border-radius:var(--radius-sm);font-size:14.5px;}
+
+  /* ---------- ADMIN ---------- */
+  .admin-gate{max-width:380px;margin:60px auto;text-align:center;}
+  .admin-gate .form-card{text-align:left;}
+  .admin-topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:26px;flex-wrap:wrap;gap:12px;}
+  .admin-tabs{display:flex;gap:8px;margin-bottom:24px;}
+  .admin-tab{padding:9px 16px;border-radius:var(--radius-pill);font-size:13.5px;font-weight:700;border:1.5px solid var(--line);background:var(--card);}
+  .admin-tab.active{background:var(--grad);color:var(--white);border-color:transparent;}
+  .admin-table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line-soft);border-radius:var(--radius);overflow:hidden;}
+  .admin-table th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:#5c6a71;padding:12px 14px;border-bottom:1px solid var(--line-soft);background:var(--paper-2);}
+  .admin-table td{padding:12px 14px;border-bottom:1px solid var(--line-soft);font-size:14px;vertical-align:middle;}
+  .admin-table tr:last-child td{border-bottom:none;}
+  .admin-thumb{width:42px;height:42px;border-radius:var(--radius-sm);object-fit:cover;}
+  .pill{font-size:11px;font-weight:700;padding:4px 10px;border-radius:var(--radius-pill);text-transform:uppercase;letter-spacing:.03em;}
+  .pill-pendiente{background:#fdead0;color:#9a5c0a;}
+  .pill-aprobado{background:#d7f2e3;color:#0e7f58;}
+  .row-actions{display:flex;gap:8px;flex-wrap:wrap;}
+  .mini-btn{font-size:12px;font-weight:700;padding:7px 12px;border-radius:var(--radius-pill);border:1.5px solid var(--line);background:var(--white);}
+  .mini-btn:hover{border-color:var(--blue);}
+  .mini-btn.danger{color:#c0392b;border-color:#f0c7c0;}
+  .mini-btn.danger:hover{border-color:#c0392b;}
+  .mini-btn.gold{color:var(--green-deep);border-color:#b9e6cd;}
+  .admin-empty{padding:40px;text-align:center;color:#5c6a71;background:var(--card);border:1px dashed var(--line);border-radius:var(--radius);}
+
+  /* ---------- CONTACTO / FOOTER ---------- */
+  .contacto-inst{background:var(--paper-2);}
+  footer{background:var(--ink);color:#bcd0d7;padding:44px 0 26px;}
+  .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:32px;margin-bottom:30px;}
+  footer h4{color:var(--white);font-size:15px;margin-bottom:12px;}
+  footer p{font-size:13.5px;line-height:1.7;}
+  footer a{font-size:13.5px;display:block;margin-bottom:8px;color:#bcd0d7;}
+  footer a:hover{color:var(--white);}
+  .footer-bottom{border-top:1px solid rgba(255,255,255,0.12);padding-top:20px;font-size:12.5px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;color:#7f939b;}
+
+  .view{display:none;}
+  .view.visible{display:block;}
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width:960px){
+    .hero-grid{grid-template-columns:1fr;}
+    .hero-mosaic{display:none;}
+    .grid-catalogo{grid-template-columns:repeat(4,1fr);}
+    .rubros-grid{grid-template-columns:repeat(2,1fr);}
+    .perfil-hero{grid-template-columns:200px 1fr;}
+    .trabajos-grid{grid-template-columns:repeat(2,1fr);}
+    .footer-grid{grid-template-columns:1fr 1fr;}
+    .field-row{grid-template-columns:1fr;}
+  }
+  @media (max-width:640px){
+    nav.links{position:fixed;top:64px;left:0;right:0;background:var(--paper);border-bottom:1px solid var(--line);flex-direction:column;align-items:flex-start;padding:16px 24px;gap:16px;display:none;}
+    nav.links.open{display:flex;}
+    .nav-toggle{display:block;}
+    .btn-registrar{order:5;}
+    .hero h1{font-size:32px;}
+    .hero-ctas{flex-direction:column;align-items:stretch;}
+    .hero-stats{gap:20px;flex-wrap:wrap;}
+    .grid-catalogo{grid-template-columns:repeat(3,1fr);gap:10px;}
+    .card-artista{padding:9px;}
+    .card-body h3{font-size:12.5px;}
+    .card-rubro{font-size:9.5px;}
+    .rubros-grid{grid-template-columns:1fr;}
+    .perfil-hero{grid-template-columns:1fr;}
+    .perfil-foto{max-width:220px;}
+    .trabajos-grid{grid-template-columns:1fr;}
+    .footer-grid{grid-template-columns:1fr;}
+    .form-card{padding:22px;}
+    .search-box{max-width:none;}
+    .admin-table{display:block;overflow-x:auto;}
+  }
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <div class="nav-inner">
+    <a href="#/" class="brand">
+      <svg class="brand-mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="brandGrad" x1="0" y1="0" x2="40" y2="40">
+            <stop offset="0" stop-color="#1868C4"/>
+            <stop offset="1" stop-color="#17A876"/>
+          </linearGradient>
+        </defs>
+        <circle cx="20" cy="20" r="19" stroke="url(#brandGrad)" stroke-width="1.6"/>
+        <path d="M6 24c4-6 8-6 12 0s8 6 12 0" stroke="url(#brandGrad)" stroke-width="2.2" stroke-linecap="round"/>
+        <circle cx="20" cy="12" r="3.2" fill="url(#brandGrad)"/>
+      </svg>
+      <span class="brand-text">Portal del Artista Local<small>PARTIDO DE MAGDALENA</small></span>
+    </a>
+    <button class="nav-toggle" id="navToggle" aria-label="Abrir menú">☰</button>
+    <nav class="links" id="navLinks">
+      <a href="#/" data-route="">Inicio</a>
+      <a href="#/artistas" data-route="artistas">Artistas</a>
+      <a href="#/rubros" data-route="rubros">Rubros</a>
+      <a href="#/contacto" data-route="contacto">Contacto</a>
+      <a href="#/registro" class="btn-registrar" data-route="registro">+ Registrar mi perfil</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- ============ INICIO ============ -->
+  <section class="view" id="view-inicio">
+    <div class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <div class="eyebrow">DIRECTORIO CULTURAL · PARTIDO DE MAGDALENA, BUENOS AIRES</div>
+          <h1>El talento de Magdalena,<br>en <em>un solo lugar</em>.</h1>
+          <p class="lede">Un espacio para descubrir, conocer y conectar con músicos, fotógrafos, artistas plásticos, escritores y artesanos de nuestra comunidad.</p>
+          <div class="hero-ctas">
+            <a href="#/artistas" class="btn-primary">Explorar catálogo</a>
+            <a href="#/registro" class="btn-ghost">Registrar mi perfil</a>
+          </div>
+          <div class="hero-stats" id="heroStats"></div>
+        </div>
+        <div class="hero-mosaic" id="heroMosaic"></div>
+      </div>
+    </div>
+
+    <div class="destacados" id="destacadosSection">
+      <div class="wrap section">
+        <div class="section-head">
+          <div>
+            <h2>Artistas destacados</h2>
+            <p>Una selección de perfiles elegidos por el equipo del portal este mes.</p>
+          </div>
+          <a href="#/artistas" class="verall" style="color:#fff;border-color:#fff;">Ver todos →</a>
+        </div>
+        <div class="dest-scroll" id="destacadosScroll"></div>
+      </div>
+    </div>
+
+    <div class="wrap section">
+      <div class="section-head">
+        <div>
+          <h2>Explorá por rubro</h2>
+          <p>Ocho disciplinas artísticas, con lugar para que se sumen nuevas más adelante.</p>
+        </div>
+        <a href="#/rubros" class="verall">Ver todos los rubros →</a>
+      </div>
+      <div class="rubros-grid" id="rubrosGridInicio"></div>
+    </div>
+  </section>
+
+  <!-- ============ ARTISTAS (CATÁLOGO) ============ -->
+  <section class="view" id="view-artistas">
+    <div class="wrap section">
+      <div class="section-head">
+        <div>
+          <h2>Catálogo de artistas</h2>
+          <p>Filtrá por rubro o buscá por nombre, disciplina o palabra clave.</p>
+        </div>
+      </div>
+      <div class="filters-bar" id="filtersBar">
+        <div class="search-box">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+          <input type="text" id="searchInput" placeholder="Buscar artista, disciplina o palabra clave…">
+        </div>
+      </div>
+      <div class="grid-catalogo" id="catalogoGrid"></div>
+    </div>
+  </section>
+
+  <!-- ============ RUBROS ============ -->
+  <section class="view" id="view-rubros">
+    <div class="wrap section">
+      <div class="section-head">
+        <div>
+          <h2>Rubros artísticos</h2>
+          <p>Cada disciplina agrupa a los artistas registrados en esa categoría.</p>
+        </div>
+      </div>
+      <div class="rubros-grid" id="rubrosGridFull"></div>
+    </div>
+  </section>
+
+  <!-- ============ PERFIL ============ -->
+  <section class="view" id="view-perfil">
+    <div class="wrap section" id="perfilContent"></div>
+  </section>
+
+  <!-- ============ REGISTRO ============ -->
+  <section class="view" id="view-registro">
+    <div class="wrap section form-shell">
+      <div class="section-head">
+        <div>
+          <h2>Registrá tu perfil</h2>
+          <p>Completá tus datos para aparecer en el catálogo. Tu perfil quedará <strong>pendiente de aprobación</strong> hasta que el equipo del portal lo revise.</p>
+        </div>
+      </div>
+      <div id="registroFormWrap"></div>
+    </div>
+  </section>
+
+  <!-- ============ CONTACTO INSTITUCIONAL ============ -->
+  <section class="view contacto-inst" id="view-contacto">
+    <div class="wrap section">
+      <div class="section-head">
+        <div>
+          <h2>Contacto</h2>
+          <p>¿Tenés dudas, sugerencias o querés que sumemos un nuevo rubro? Escribinos.</p>
+        </div>
+      </div>
+      <div class="form-card" style="max-width:600px;">
+        <p style="font-size:15px;margin-bottom:18px;">Este portal es un espacio abierto a la comunidad artística del Partido de Magdalena. Para consultas institucionales, podés escribir a:</p>
+        <p style="font-family:'Sora',sans-serif;font-weight:700;font-size:19px;margin-bottom:6px;">portaldelartista.magdalena@gmail.com</p>
+        <p style="font-size:13.5px;color:#6b6c70;">Municipio del Partido de Magdalena, Provincia de Buenos Aires.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ADMIN ============ -->
+  <section class="view" id="view-admin">
+    <div class="wrap section" id="adminContent"></div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <h4>Portal del Artista Local del Partido de Magdalena</h4>
+        <p>Un directorio cultural pensado para visibilizar y conectar a los artistas de nuestra comunidad con el público local y visitante.</p>
+      </div>
+      <div>
+        <h4>Explorar</h4>
+        <a href="#/artistas">Catálogo de artistas</a>
+        <a href="#/rubros">Rubros</a>
+        <a href="#/registro">Registrar mi perfil</a>
+      </div>
+      <div>
+        <h4>Portal</h4>
+        <a href="#/contacto">Contacto</a>
+        <a href="#/admin">Acceso administrador</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Portal del Artista Local — Partido de Magdalena.</span>
+      <span>Los perfiles marcados "EJEMPLO" son ficticios y se incluyen a modo demostrativo.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* =========================================================================
+   PORTAL DEL ARTISTA LOCAL — DATOS Y LÓGICA
+   Persistencia: window.storage (datos compartidos entre visitantes de la demo)
+   ========================================================================= */
+
+const RUBROS = [
+  { id:'solistas',        nombre:'Solistas',              emoji:'🎤', desc:'Artistas musicales solistas' },
+  { id:'bandas',          nombre:'Bandas',                emoji:'🎸', desc:'Grupos y bandas musicales' },
+  { id:'musicos',         nombre:'Músicos',                emoji:'🎹', desc:'Instrumentistas y sesionistas' },
+  { id:'fotografia',      nombre:'Fotografía',             emoji:'📸', desc:'Fotógrafos y fotógrafas' },
+  { id:'artes-plasticas', nombre:'Artes Plásticas',        emoji:'🎨', desc:'Pintura, escultura y otras técnicas' },
+  { id:'poesia',          nombre:'Poesía',                 emoji:'✍️', desc:'Poetas y narradores orales' },
+  { id:'literatura',      nombre:'Literatura',             emoji:'📚', desc:'Escritores y escritoras' },
+  { id:'artesania',       nombre:'Artesanía',              emoji:'🧶', desc:'Artesanos y trabajadores manuales' },
+];
+
+function rubroInfo(id){ return RUBROS.find(r=>r.id===id) || {nombre:id, emoji:'✦'}; }
+
+function img(seed, w=600, h=750){ return `https://picsum.photos/seed/${seed}/${w}/${h}`; }
+
+const SEED_ARTISTAS = [
+  // SOLISTAS
+  { id:'a1', esEjemplo:true, estado:'aprobado', destacado:true, rubro:'solistas', subcategoria:'Folklore',
+    nombre:'Marina Etchegoyen', nombreArtistico:'Marina Etche', localidad:'Magdalena, centro',
+    fotoPerfil:img('marina-etche',600,750),
+    descripcionBreve:'Cantautora de folklore rioplatense con guitarra criolla.',
+    biografia:'PERFIL DE EJEMPLO. Marina nació y creció en el casco urbano de Magdalena, donde comenzó a cantar en peñas familiares desde los doce años. Su repertorio combina chamamé, milonga y canción de autor, con letras que hablan del río, el campo y la vida de pueblo.',
+    contacto:{ whatsapp:'5492215550001', instagram:'https://instagram.com/marinaetche.ejemplo', facebook:'https://facebook.com/marinaetche.ejemplo' },
+    trabajos:[
+      {tipo:'Canción', titulo:'Costa Brava (single, 2023)', descripcion:'Canción sobre las barrancas del río.', imagen:img('marina-trabajo1',500,320)},
+      {tipo:'Show', titulo:'Peña de la Rural de Magdalena', descripcion:'Presentación en vivo, edición 2024.', imagen:img('marina-trabajo2',500,320)},
+    ]},
+  { id:'a2', esEjemplo:true, estado:'aprobado', destacado:false, rubro:'solistas', subcategoria:'Canción de autor',
+    nombre:'Ezequiel Domenech', nombreArtistico:'Eze Domenech', localidad:'Atalaya',
+    fotoPerfil:img('eze-domenech',600,750),
+    descripcionBreve:'Canción de autor con guitarra y arreglos electrónicos sutiles.',
+    biografia:'PERFIL DE EJEMPLO. Ezequiel combina la tradición del cancionero rioplatense con texturas electrónicas grabadas en su estudio casero en Atalaya. Se presenta en bares y espacios culturales de la zona.',
+    contacto:{ whatsapp:'5492215550002', instagram:'https://instagram.com/ezedomenech.ejemplo' },
+    trabajos:[
+      {tipo:'Disco', titulo:'Bajofondo Pampeano (EP, 2022)', descripcion:'Primer EP de estudio, 5 canciones.', imagen:img('eze-trabajo1',500,320)},
+    ]},
+  // BANDAS
+  { id:'a3', esEjemplo:true, estado:'aprobado', destacado:true, rubro:'bandas', subcategoria:'Rock',
+    nombre:'—', nombreArtistico:'Los Barranqueros', localidad:'Magdalena, centro',
+    fotoPerfil:img('barranqueros',600,750),
+    descripcionBreve:'Banda de rock de barrio, formada en 2018.',
+    biografia:'BANDA DE EJEMPLO. Los Barranqueros nacieron entre amigos del club de barrio y hoy tocan versiones y temas propios en fiestas patronales y bares de la región. Cinco integrantes: voz, dos guitarras, bajo y batería.',
+    contacto:{ whatsapp:'5492215550003', instagram:'https://instagram.com/losbarranqueros.ejemplo', facebook:'https://facebook.com/losbarranqueros.ejemplo' },
+    trabajos:[
+      {tipo:'Videoclip', titulo:'Río Adentro (video, 2023)', descripcion:'Grabado en las barrancas de Magdalena.', imagen:img('barranq-trabajo1',500,320)},
+      {tipo:'Show', titulo:'Fiesta Patronal 2024', descripcion:'Show principal de la fiesta del pueblo.', imagen:img('barranq-trabajo2',500,320)},
+    ]},
+  { id:'a4', esEjemplo:true, estado:'aprobado', destacado:false, rubro:'bandas', subcategoria:'Cumbia',
+    nombre:'—', nombreArtistico:'La Junta Magdalena', localidad:'Magdalena',
+    fotoPerfil:img('la-junta',600,750),
+    descripcionBreve:'Cumbia y sonido tropical para fiestas y eventos.',
+    biografia:'BANDA DE EJEMPLO. Con más de diez años tocando en la región, La Junta Magdalena anima fiestas, casamientos y eventos municipales con un repertorio de cumbia clásica y tropical.',
+    contacto:{ whatsapp:'5492215550004' },
+    trabajos:[ {tipo:'Show', titulo:'Aniversario del pueblo, 2023', descripcion:'Show en la plaza principal.', imagen:img('junta-trabajo1',500,320)} ]},
+  // MUSICOS
+  { id:'a5', esEjemplo:true, estado:'aprobado', destacado:false, rubro:'musicos', subcategoria:'Guitarra',
+    nombre:'Rodrigo Sosa', nombreArtistico:'Rodrigo Sosa', localidad:'Vieytes',
+    fotoPerfil:img('rodrigo-sosa',600,750),
+    descripcionBreve:'Guitarrista acompañante para eventos y grabaciones.',
+    biografia:'PERFIL DE EJEMPLO. Rodrigo se dedica a acompañar cantantes y bandas locales, y también da clases particulares de guitarra en Vieytes y alrededores.',
+    contacto:{ whatsapp:'5492215550005', instagram:'https://instagram.com/rodrigososa.ejemplo' },
+    trabajos:[ {tipo:'Sesión', titulo:'Grabación disco solidario 2023', descripcion:'Guitarra acompañante en 4 temas.', imagen:img('rodrigo-trabajo1',500,320)} ]},
+  { id:'a6', esEjemplo:true, estado:'aprobado', destacado:false, rubro:'musicos', subcategoria:'Acordeón',
+    nombre:'Celina Ibarra', nombreArtistico:'Celina Ibarra', localidad:'Magdalena, zona rural',
+    fotoPerfil:img('celina-ibarra',600,750),
+    descripcionBreve:'Acordeonista de chamamé y música litoraleña.',
+    biografia:'PERFIL DE EJEMPLO. Celina aprendió acordeón de su abuelo y hoy participa de peñas y encuentros folklóricos en toda la zona rural del partido.',
+    contacto:{ instagram:'https://instagram.com/celinaibarra.ejemplo' },
+    trabajos:[]},
+  // FOTOGRAFIA
+  { id:'a7', esEjemplo:true, estado:'aprobado', destacado:true, rubro:'fotografia', subcategoria:'Paisaje y naturaleza',
+    nombre:'Tomás Beltrán', nombreArtistico:'Tomás Beltrán Foto', localidad:'Magdalena, costa',
+    fotoPerfil:img('tomas-beltran',600,750),
+    descripcionBreve:'Fotografía de paisaje, aves y vida costera del Río de la Plata.',
+    biografia:'PERFIL DE EJEMPLO. Tomás recorre la costa y la Reserva Natural de Magdalena documentando aves y paisajes. Sus fotos se exhibieron en la Casa de la Cultura local.',
+    contacto:{ whatsapp:'5492215550007', instagram:'https://instagram.com/tomasbeltran.ejemplo' },
+    trabajos:[
+      {tipo:'Exposición', titulo:'Costa y Humedal (2023)', descripcion:'Muestra en la Casa de la Cultura de Magdalena.', imagen:img('tomas-trabajo1',500,320)},
+      {tipo:'Serie fotográfica', titulo:'Aves del Río de la Plata', descripcion:'Serie de 20 fotografías.', imagen:img('tomas-trabajo2',500,320)},
+    ]},
+  { id:'a8', esEjemplo:true, estado:'aprobado', destacado:false, rubro:'fotografia', subcategoria:'Retrato y eventos',
+    nombre:'Julieta Ferraro', nombreArtistico:'Juli Ferraro', localidad:'Magdalena, centro',
+    fotoPerfil:img('julieta-ferraro',600,750),
+    descripcionBreve:'Fotografía de retrato, casamientos y eventos sociales.',
+    biografia:'PERFIL DE EJEMPLO. Julieta se especializa en retrato familiar y cobertura de eventos sociales en Magdalena y localidades vecinas.',
+    contacto:{ whatsapp:'5492215550008', facebook:'https://facebook.com/juliferraro.ejemplo' },
+    trabajos:[]},
+  // ARTES PLASTICAS
+  { id:'a9', esEjemplo:true, estado:'aprobado', destacado:false, rubro:'artes-plasticas', subcategoria:'Pintura',
+    nombre:'Norberto Aguirre', nombreArtistico:'Norberto Aguirre', localidad:'Magdalena, centro',
+    fotoPerfil:img('norberto-aguirre',600,750),
+    descripcionBreve:'Pintor paisajista, óleo sobre tela.',
+    biografia:'PERFIL DE EJEMPLO. Norberto pinta desde hace más de veinte años, retratando el paisaje pampeano y costero. Expone habitualmente en ferias culturales del partido.',
+    contacto:{ whatsapp:'5492215550009' },
+    trabajos:[ {tipo:'Obra', titulo:'Atardecer en las Barrancas (óleo, 2021)', descripcion:'Óleo sobre tela, 60x80cm.', imagen:img('norberto-trabajo1',500,320)} ]},
+  { id:'a10', esEjemplo:true, estado:'aprobado', destacado:true, rubro:'artes-plasticas', subcategoria:'Escultura',
+    nombre:'Paula Miranda', nombreArtistico:'Paula Miranda', localidad:'Magdalena',
+    fotoPerfil:img('paula-miranda',600,750),
+    descripcionBreve:'Escultora en cerámica y materiales recuperados.',
+    biografia:'PERFIL DE EJEMPLO. Paula trabaja la cerámica y el reciclado de materiales de la zona rural para crear esculturas de pequeño y mediano formato.',
+    contacto:{ instagram:'https://instagram.com/paulamiranda.ejemplo', whatsapp:'5492215550010' },
+    trabajos:[ {tipo:'Obra', titulo:'Serie "Retorno" (cerámica, 2022)', descripcion:'Conjunto de seis piezas.', imagen:img('paula-trabajo1',500,320)} ]},
+  // POESIA
+  { id:'a11', esEjemplo:true, estado:'aprobado', destacado:false, rubro:'poesia', subcategoria:'Poesía urbana',
+    nombre:'Guillermo Paz', nombreArtistico:'Guille Paz', localidad:'Magdalena, centro',
+    fotoPerfil:img('guillermo-paz',600,750),
+    descripcionBreve:'Poeta y organizador de ciclos de lectura en el pueblo.',
+    biografia:'PERFIL DE EJEMPLO. Guillermo organiza el ciclo de lectura mensual "Voces de Magdalena" y publica sus poemas en revistas culturales regionales.',
+    contacto:{ instagram:'https://instagram.com/guillepaz.ejemplo' },
+    trabajos:[ {tipo:'Publicación', titulo:'Ciclo Voces de Magdalena', descripcion:'Lecturas mensuales desde 2021.', imagen:img('guille-trabajo1',500,320)} ]},
+  { id:'a12', esEjemplo:true, estado:'aprobado', destacado:false, rubro:'poesia', subcategoria:'Poesía costumbrista',
+    nombre:'Amanda Rojas', nombreArtistico:'Amanda Rojas', localidad:'Atalaya',
+    fotoPerfil:img('amanda-rojas',600,750),
+    descripcionBreve:'Poesía costumbrista sobre la vida rural del partido.',
+    biografia:'PERFIL DE EJEMPLO. Amanda escribe sobre la vida de campo y las tradiciones gauchas, y participa en peñas y fogones literarios de la zona.',
+    contacto:{ whatsapp:'5492215550012' },
+    trabajos:[]},
+  // LITERATURA
+  { id:'a13', esEjemplo:true, estado:'aprobado', destacado:false, rubro:'literatura', subcategoria:'Narrativa',
+    nombre:'Facundo Elizalde', nombreArtistico:'Facundo Elizalde', localidad:'Magdalena, centro',
+    fotoPerfil:img('facundo-elizalde',600,750),
+    descripcionBreve:'Escritor de cuentos y novela breve.',
+    biografia:'PERFIL DE EJEMPLO. Facundo publicó dos libros de cuentos ambientados en pueblos de la costa bonaerense, y coordina un taller literario en la biblioteca popular.',
+    contacto:{ instagram:'https://instagram.com/facundoelizalde.ejemplo', whatsapp:'5492215550013' },
+    trabajos:[ {tipo:'Libro', titulo:'Cuentos del Estuario (2020)', descripcion:'Libro de relatos, edición independiente.', imagen:img('facundo-trabajo1',500,320)} ]},
+  { id:'a14', esEjemplo:true, estado:'aprobado', destacado:false, rubro:'literatura', subcategoria:'Literatura infantil',
+    nombre:'Sabrina Núñez', nombreArtistico:'Sabrina Núñez', localidad:'Magdalena',
+    fotoPerfil:img('sabrina-nunez',600,750),
+    descripcionBreve:'Escritora de literatura infantil y juvenil.',
+    biografia:'PERFIL DE EJEMPLO. Sabrina escribe cuentos infantiles inspirados en animales de la reserva natural y visita escuelas del partido para leerlos con los chicos.',
+    contacto:{ facebook:'https://facebook.com/sabrinanunez.ejemplo' },
+    trabajos:[]},
+  // ARTESANIA
+  { id:'a15', esEjemplo:true, estado:'aprobado', destacado:false, rubro:'artesania', subcategoria:'Cuero y talabartería',
+    nombre:'Hector Villalba', nombreArtistico:'Talabartería Villalba', localidad:'Magdalena, zona rural',
+    fotoPerfil:img('hector-villalba',600,750),
+    descripcionBreve:'Talabartero, trabajos en cuero crudo y curtido.',
+    biografia:'PERFIL DE EJEMPLO. Héctor continúa el oficio familiar de talabartería, elaborando recado, riendas y artículos de cuero para las estancias de la zona.',
+    contacto:{ whatsapp:'5492215550015' },
+    trabajos:[ {tipo:'Producción', titulo:'Recado criollo completo', descripcion:'Trabajo a pedido, cuero curtido.', imagen:img('hector-trabajo1',500,320)} ]},
+  { id:'a16', esEjemplo:true, estado:'aprobado', destacado:false, rubro:'artesania', subcategoria:'Tejido',
+    nombre:'Lucía Barrios', nombreArtistico:'Lucía Barrios Tejidos', localidad:'Magdalena, centro',
+    fotoPerfil:img('lucia-barrios',600,750),
+    descripcionBreve:'Tejidos artesanales en telar y crochet.',
+    biografia:'PERFIL DE EJEMPLO. Lucía teje en telar mapuche y crochet, y vende sus piezas en la feria de artesanos que se organiza en la plaza los fines de semana.',
+    contacto:{ instagram:'https://instagram.com/luciabarrios.ejemplo', whatsapp:'5492215550016' },
+    trabajos:[ {tipo:'Producción', titulo:'Mantas de telar (colección 2024)', descripcion:'Serie de mantas en lana de oveja.', imagen:img('lucia-trabajo1',500,320)} ]},
+];
+
+/* ---------------------------- ESTADO EN MEMORIA ---------------------------- */
+let ARTISTAS = [];
+let filtroRubroActivo = 'todos';
+let terminoBusqueda = '';
+let adminAutenticado = false;
+let adminTabActiva = 'pendientes';
+const ADMIN_PASSWORD = 'magdalena2026';
+
+/* ---------------------------- PERSISTENCIA ---------------------------- */
+async function cargarDatos(){
+  try{
+    const res = await window.storage.get('artistas', true);
+    ARTISTAS = res && res.value ? JSON.parse(res.value) : null;
+  }catch(e){ ARTISTAS = null; }
+  if(!ARTISTAS){
+    ARTISTAS = SEED_ARTISTAS;
+    await guardarDatos();
+  }
+}
+async function guardarDatos(){
+  try{ await window.storage.set('artistas', JSON.stringify(ARTISTAS), true); }
+  catch(e){ console.error('No se pudo guardar', e); }
+}
+
+/* ---------------------------- ROUTER ---------------------------- */
+function parseRoute(){
+  const hash = location.hash.replace(/^#\/?/, '');
+  const parts = hash.split('/').filter(Boolean);
+  return { name: parts[0] || 'inicio', param: parts[1] || null };
+}
+function setActiveNav(routeName){
+  document.querySelectorAll('nav.links a[data-route]').forEach(a=>{
+    a.classList.toggle('active', a.dataset.route === routeName || (a.dataset.route==='' && routeName==='inicio'));
+  });
+}
+function showView(id){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('visible'));
+  const el = document.getElementById(id);
+  if(el) el.classList.add('visible');
+}
+async function router(){
+  const { name, param } = parseRoute();
+  document.getElementById('navLinks').classList.remove('open');
+  window.scrollTo({top:0, behavior:'instant' in window ? 'instant':'auto'});
+  if(name === 'inicio' || name===''){ showView('view-inicio'); renderInicio(); setActiveNav(''); }
+  else if(name === 'artistas'){ showView('view-artistas'); renderCatalogo(); setActiveNav('artistas'); }
+  else if(name === 'rubros'){
+    showView('view-rubros'); renderRubrosFull(); setActiveNav('rubros');
+  }
+  else if(name === 'rubro' && param){ filtroRubroActivo = param; terminoBusqueda=''; showView('view-artistas'); renderCatalogo(); setActiveNav('rubros'); }
+  else if(name === 'perfil' && param){ showView('view-perfil'); renderPerfil(param); setActiveNav(''); }
+  else if(name === 'registro'){ showView('view-registro'); renderFormularioRegistro(); setActiveNav('registro'); }
+  else if(name === 'contacto'){ showView('view-contacto'); setActiveNav('contacto'); }
+  else if(name === 'admin'){ showView('view-admin'); renderAdmin(); setActiveNav(''); }
+  else { showView('view-inicio'); renderInicio(); }
+}
+
+/* ---------------------------- HELPERS UI ---------------------------- */
+function chipsRubrosHtml(){
+  const todos = `<button class="chip ${filtroRubroActivo==='todos'?'active':''}" data-rubro="todos">Todos</button>`;
+  const resto = RUBROS.map(r=>`<button class="chip ${filtroRubroActivo===r.id?'active':''}" data-rubro="${r.id}">${r.emoji} ${r.nombre}</button>`).join('');
+  return todos + resto;
+}
+function cardArtistaHtml(a){
+  const info = rubroInfo(a.rubro);
+  const nombreMostrar = a.nombreArtistico || a.nombre;
+  return `
+  <a href="#/perfil/${a.id}" class="card-artista" title="${nombreMostrar} — ${info.nombre}">
+    <div class="card-foto">
+      <img src="${a.fotoPerfil}" alt="Foto de ${nombreMostrar}" loading="lazy">
+      ${a.esEjemplo?'<span class="card-badge">Ejemplo</span>':''}
+    </div>
+    <div class="card-body">
+      <h3>${nombreMostrar}</h3>
+      <div class="card-rubro">${info.emoji} ${info.nombre}</div>
+    </div>
+  </a>`;
+}
+
+/* ---------------------------- INICIO ---------------------------- */
+function renderInicio(){
+  const aprobados = ARTISTAS.filter(a=>a.estado==='aprobado');
+  document.getElementById('heroStats').innerHTML = `
+    <div><b>${aprobados.length}</b><span>Artistas registrados</span></div>
+    <div><b>${RUBROS.length}</b><span>Rubros artísticos</span></div>
+    <div><b>${aprobados.filter(a=>a.destacado).length}</b><span>Destacados este mes</span></div>
+  `;
+  const seedsMosaico = aprobados.slice(0,6);
+  document.getElementById('heroMosaic').innerHTML = seedsMosaico.map(a=>`<div><img src="${a.fotoPerfil}" alt=""></div>`).join('');
+
+  const destacados = aprobados.filter(a=>a.destacado);
+  const destWrap = document.getElementById('destacadosSection');
+  if(destacados.length===0){ destWrap.style.display='none'; }
+  else{
+    destWrap.style.display='block';
+    document.getElementById('destacadosScroll').innerHTML = destacados.map(a=>{
+      const info = rubroInfo(a.rubro);
+      return `<a href="#/perfil/${a.id}" class="dest-card">
+        <div class="dc-foto"><img src="${a.fotoPerfil}" alt=""></div>
+        <h4>${a.nombreArtistico||a.nombre}</h4>
+        <div class="dc-rubro">${info.emoji} ${info.nombre}</div>
+      </a>`;
+    }).join('');
+  }
+
+  document.getElementById('rubrosGridInicio').innerHTML = RUBROS.map(r=>{
+    const count = aprobados.filter(a=>a.rubro===r.id).length;
+    return `<a href="#/rubro/${r.id}" class="rubro-tile">
+      <div class="rt-emoji">${r.emoji}</div>
+      <h3>${r.nombre}</h3>
+      <span>${count} ${count===1?'artista':'artistas'}</span>
+    </a>`;
+  }).join('');
+}
+
+/* ---------------------------- CATALOGO ---------------------------- */
+function renderCatalogo(){
+  document.getElementById('filtersBar').innerHTML = chipsRubrosHtml() + `
+    <div class="search-box">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input type="text" id="searchInput" placeholder="Buscar artista, disciplina o palabra clave…" value="${terminoBusqueda}">
+    </div>`;
+  document.getElementById('filtersBar').querySelectorAll('.chip').forEach(chip=>{
+    chip.addEventListener('click', ()=>{ filtroRubroActivo = chip.dataset.rubro; pintarGrid(); actualizarChipsActivos(); });
+  });
+  document.getElementById('filtersBar').querySelector('#searchInput').addEventListener('input', (e)=>{
+    terminoBusqueda = e.target.value.toLowerCase(); pintarGrid();
+  });
+  pintarGrid();
+}
+function actualizarChipsActivos(){
+  document.querySelectorAll('#filtersBar .chip').forEach(c=>c.classList.toggle('active', c.dataset.rubro===filtroRubroActivo));
+}
+function pintarGrid(){
+  let lista = ARTISTAS.filter(a=>a.estado==='aprobado');
+  if(filtroRubroActivo!=='todos') lista = lista.filter(a=>a.rubro===filtroRubroActivo);
+  if(terminoBusqueda){
+    const q = terminoBusqueda;
+    lista = lista.filter(a=>{
+      const info = rubroInfo(a.rubro);
+      const haystack = [a.nombre,a.nombreArtistico,info.nombre,a.subcategoria,a.descripcionBreve,a.localidad].join(' ').toLowerCase();
+      return haystack.includes(q);
+    });
+  }
+  const grid = document.getElementById('catalogoGrid');
+  if(lista.length===0){
+    grid.innerHTML = `<div class="empty-state"><h3>No encontramos artistas con esos filtros</h3><p>Probá con otro rubro o palabra de búsqueda.</p></div>`;
+  }else{
+    grid.innerHTML = lista.map(cardArtistaHtml).join('');
+  }
+}
+
+/* ---------------------------- RUBROS (página completa) ---------------------------- */
+function renderRubrosFull(){
+  const aprobados = ARTISTAS.filter(a=>a.estado==='aprobado');
+  document.getElementById('rubrosGridFull').innerHTML = RUBROS.map(r=>{
+    const count = aprobados.filter(a=>a.rubro===r.id).length;
+    return `<a href="#/rubro/${r.id}" class="rubro-tile">
+      <div class="rt-emoji">${r.emoji}</div>
+      <h3>${r.nombre}</h3>
+      <span>${r.desc} · ${count} ${count===1?'artista':'artistas'}</span>
+    </a>`;
+  }).join('');
+}
+
+/* ---------------------------- PERFIL ---------------------------- */
+function botonesContacto(c){
+  if(!c) return '';
+  let out = '';
+  if(c.whatsapp){
+    const num = c.whatsapp.replace(/[^0-9]/g,'');
+    out += `<a class="btn-contacto btn-wa" href="https://wa.me/${num}" target="_blank" rel="noopener">💬 WhatsApp</a>`;
+  }
+  if(c.instagram) out += `<a class="btn-contacto btn-ig" href="${c.instagram}" target="_blank" rel="noopener">📷 Instagram</a>`;
+  if(c.facebook) out += `<a class="btn-contacto btn-fb" href="${c.facebook}" target="_blank" rel="noopener">👍 Facebook</a>`;
+  if(c.youtube) out += `<a class="btn-contacto btn-ot" href="${c.youtube}" target="_blank" rel="noopener">▶ YouTube</a>`;
+  if(c.tiktok) out += `<a class="btn-contacto btn-ot" href="${c.tiktok}" target="_blank" rel="noopener">🎵 TikTok</a>`;
+  if(c.spotify) out += `<a class="btn-contacto btn-ot" href="${c.spotify}" target="_blank" rel="noopener">🎧 Spotify</a>`;
+  if(c.sitioweb) out += `<a class="btn-contacto btn-ot" href="${c.sitioweb}" target="_blank" rel="noopener">🌐 Sitio web</a>`;
+  if(c.email) out += `<a class="btn-contacto btn-ot" href="mailto:${c.email}">✉ Email</a>`;
+  return out;
+}
+function renderPerfil(id){
+  const a = ARTISTAS.find(x=>x.id===id);
+  const cont = document.getElementById('perfilContent');
+  if(!a || a.estado!=='aprobado'){
+    cont.innerHTML = `<div class="empty-state"><h3>Perfil no encontrado</h3><p>Puede que aún no esté aprobado o haya sido eliminado.</p><br><a href="#/artistas" class="btn-primary">Volver al catálogo</a></div>`;
+    return;
+  }
+  const info = rubroInfo(a.rubro);
+  const trabajosHtml = (a.trabajos&&a.trabajos.length) ? `
+    <div class="perfil-section">
+      <h2>Trabajos y producciones</h2>
+      <p class="ps-sub">Una selección de obras, proyectos y presentaciones de ${a.nombreArtistico||a.nombre}.</p>
+      <div class="trabajos-grid">
+        ${a.trabajos.map(t=>`
+          <div class="trabajo-card">
+            ${t.imagen?`<img src="${t.imagen}" alt="${t.titulo}">`:''}
+            <div class="tc-body">
+              <div class="tc-tipo">${t.tipo}</div>
+              <h4>${t.titulo}</h4>
+              <p>${t.descripcion||''}</p>
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>` : '';
+
+  cont.innerHTML = `
+    <a href="#/artistas" class="perfil-back">← Volver al catálogo</a>
+    <div class="perfil-hero">
+      <div class="perfil-foto"><img src="${a.fotoPerfil}" alt="Foto de ${a.nombreArtistico||a.nombre}"></div>
+      <div class="perfil-info">
+        <div class="card-rubro">${info.emoji} ${info.nombre}${a.subcategoria?' · '+a.subcategoria:''}</div>
+        <h1>${a.nombreArtistico||a.nombre}</h1>
+        ${a.nombreArtistico && a.nombre && a.nombre!=='—' ? `<div class="p-nombreartistico">${a.nombre}</div>`:''}
+        <div class="p-loc">📍 ${a.localidad||'Partido de Magdalena'}</div>
+        <p class="p-desc">${a.descripcionBreve||''}</p>
+        <div class="contacto-botones">${botonesContacto(a.contacto)}</div>
+        ${a.esEjemplo?'<p style="margin-top:16px;font-size:12px;color:#8a8b8f;">* Perfil de ejemplo, incluido a modo demostrativo.</p>':''}
+      </div>
+    </div>
+    <div class="perfil-section">
+      <h2>Sobre ${a.nombreArtistico?'el/la artista':'la banda'}</h2>
+      <p class="bio-text">${a.biografia||'Sin biografía cargada.'}</p>
+    </div>
+    ${trabajosHtml}
+  `;
+}
+
+/* ---------------------------- REGISTRO ---------------------------- */
+function renderFormularioRegistro(){
+  const wrap = document.getElementById('registroFormWrap');
+  wrap.innerHTML = `
+    <form class="form-card" id="formRegistro" novalidate>
+      <fieldset>
+        <legend>Datos personales / artísticos</legend>
+        <div class="fs-hint">Contanos quién sos y a qué te dedicás.</div>
+        <div class="field-row">
+          <div class="field"><label>Nombre y apellido *</label><input type="text" name="nombre" required></div>
+          <div class="field"><label>Nombre artístico <span class="opt">(opcional)</span></label><input type="text" name="nombreArtistico"></div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Rubro *</label>
+            <select name="rubro" required>
+              <option value="">Elegí un rubro…</option>
+              ${RUBROS.map(r=>`<option value="${r.id}">${r.emoji} ${r.nombre}</option>`).join('')}
+            </select>
+          </div>
+          <div class="field"><label>Subcategoría <span class="opt">(ej: folklore, retrato…)</span></label><input type="text" name="subcategoria"></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>Localidad *</label><input type="text" name="localidad" placeholder="Ej: Magdalena centro, Atalaya, Vieytes…" required></div>
+          <div class="field"><label>Foto de perfil (URL) <span class="opt">(opcional)</span></label><input type="url" name="fotoPerfil" placeholder="https://…"></div>
+        </div>
+        <div class="field full"><label>Descripción breve *</label><input type="text" name="descripcionBreve" maxlength="120" placeholder="Una línea que te describa (máx. 120 caracteres)" required></div>
+        <div class="field full"><label>Biografía</label><textarea name="biografia" placeholder="Contá tu recorrido, formación y motivaciones…"></textarea></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Trayectoria</legend>
+        <div class="fs-hint">Un trabajo destacado para mostrar en tu perfil (podés cargar más luego desde el panel de administración).</div>
+        <div class="field-row">
+          <div class="field"><label>Título del trabajo <span class="opt">(opcional)</span></label><input type="text" name="trabajoTitulo" placeholder="Ej: nombre de la canción, libro, obra…"></div>
+          <div class="field"><label>Tipo <span class="opt">(opcional)</span></label><input type="text" name="trabajoTipo" placeholder="Ej: canción, libro, obra, exposición…"></div>
+        </div>
+        <div class="field full"><label>Descripción <span class="opt">(opcional)</span></label><input type="text" name="trabajoDescripcion"></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Contacto</legend>
+        <div class="fs-hint">Sólo se mostrarán los botones de los datos que completes.</div>
+        <div class="field-row">
+          <div class="field"><label>WhatsApp <span class="opt">(con código de país, ej: 549221…)</span></label><input type="text" name="whatsapp"></div>
+          <div class="field"><label>Email</label><input type="email" name="email"></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>Instagram (URL)</label><input type="url" name="instagram"></div>
+          <div class="field"><label>Facebook (URL)</label><input type="url" name="facebook"></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>YouTube (URL)</label><input type="url" name="youtube"></div>
+          <div class="field"><label>Sitio web (URL)</label><input type="url" name="sitioweb"></div>
+        </div>
+      </fieldset>
+
+      <div class="form-submit-row">
+        <button type="submit" class="btn-primary">Enviar perfil para revisión</button>
+        <span style="font-size:13px;color:#6b6c70;">Tu perfil aparecerá como "pendiente de aprobación".</span>
+      </div>
+    </form>
+    <div id="registroOk" style="display:none;margin-top:20px;" class="form-msg-ok"></div>
+  `;
+  document.getElementById('formRegistro').addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const data = Object.fromEntries(fd.entries());
+    if(!data.nombre || !data.rubro || !data.localidad || !data.descripcionBreve){ return; }
+    const nuevo = {
+      id: 'u'+Date.now(),
+      esEjemplo:false,
+      estado:'pendiente',
+      destacado:false,
+      rubro:data.rubro,
+      subcategoria:data.subcategoria||'',
+      nombre:data.nombre,
+      nombreArtistico:data.nombreArtistico||'',
+      localidad:data.localidad,
+      fotoPerfil: data.fotoPerfil || img('perfil-'+Date.now()),
+      descripcionBreve:data.descripcionBreve,
+      biografia:data.biografia||'',
+      contacto:{
+        whatsapp:data.whatsapp||'', email:data.email||'', instagram:data.instagram||'',
+        facebook:data.facebook||'', youtube:data.youtube||'', sitioweb:data.sitioweb||''
+      },
+      trabajos: data.trabajoTitulo ? [{tipo:data.trabajoTipo||'Trabajo', titulo:data.trabajoTitulo, descripcion:data.trabajoDescripcion||'', imagen:''}] : []
+    };
+    ARTISTAS.push(nuevo);
+    await guardarDatos();
+    e.target.style.display='none';
+    const ok = document.getElementById('registroOk');
+    ok.style.display='block';
+    ok.innerHTML = `<strong>¡Gracias, ${nuevo.nombre.split(' ')[0]}!</strong> Tu perfil fue enviado y quedó <strong>pendiente de aprobación</strong>. El equipo del portal lo va a revisar antes de publicarlo en el catálogo.`;
+  });
+}
+
+/* ---------------------------- ADMIN ---------------------------- */
+function renderAdmin(){
+  const cont = document.getElementById('adminContent');
+  if(!adminAutenticado){
+    cont.innerHTML = `
+      <div class="admin-gate">
+        <h2 style="margin-bottom:8px;">Panel de administración</h2>
+        <p style="color:#6b6c70;font-size:14px;margin-bottom:22px;">Acceso restringido al equipo del portal.</p>
+        <div class="form-card">
+          <div class="field full" style="margin-bottom:16px;"><label>Contraseña</label><input type="password" id="adminPass"></div>
+          <button class="btn-primary" id="adminEnter" style="width:100%;">Ingresar</button>
+          <p id="adminError" style="color:#a33b2b;font-size:13px;margin-top:12px;display:none;">Contraseña incorrecta.</p>
+        </div>
+      </div>`;
+    document.getElementById('adminEnter').addEventListener('click', ()=>{
+      const val = document.getElementById('adminPass').value;
+      if(val === ADMIN_PASSWORD){ adminAutenticado = true; renderAdmin(); }
+      else{ document.getElementById('adminError').style.display='block'; }
+    });
+    document.getElementById('adminPass').addEventListener('keydown', (e)=>{ if(e.key==='Enter') document.getElementById('adminEnter').click(); });
+    return;
+  }
+
+  const pendientes = ARTISTAS.filter(a=>a.estado==='pendiente');
+  const aprobados = ARTISTAS.filter(a=>a.estado==='aprobado');
+  const listaActiva = adminTabActiva==='pendientes' ? pendientes : aprobados;
+
+  cont.innerHTML = `
+    <div class="admin-topbar">
+      <div><h2>Panel de administración</h2><p style="color:#6b6c70;font-size:14px;">Aprobá perfiles nuevos, marcá destacados y gestioná el catálogo.</p></div>
+      <button class="mini-btn" id="adminLogout">Cerrar sesión</button>
+    </div>
+    <div class="admin-tabs">
+      <button class="admin-tab ${adminTabActiva==='pendientes'?'active':''}" data-tab="pendientes">Pendientes (${pendientes.length})</button>
+      <button class="admin-tab ${adminTabActiva==='aprobados'?'active':''}" data-tab="aprobados">Aprobados (${aprobados.length})</button>
+    </div>
+    <div id="adminTableWrap"></div>
+  `;
+  document.getElementById('adminLogout').addEventListener('click', ()=>{ adminAutenticado=false; renderAdmin(); });
+  cont.querySelectorAll('.admin-tab').forEach(t=>t.addEventListener('click', ()=>{ adminTabActiva = t.dataset.tab; renderAdmin(); }));
+
+  const tableWrap = document.getElementById('adminTableWrap');
+  if(listaActiva.length===0){
+    tableWrap.innerHTML = `<div class="admin-empty">No hay perfiles ${adminTabActiva} por el momento.</div>`;
+    return;
+  }
+  tableWrap.innerHTML = `
+    <table class="admin-table">
+      <thead><tr><th></th><th>Nombre</th><th>Rubro</th><th>Localidad</th><th>Estado</th><th>Destacado</th><th>Acciones</th></tr></thead>
+      <tbody>
+        ${listaActiva.map(a=>{
+          const info = rubroInfo(a.rubro);
+          return `<tr data-id="${a.id}">
+            <td><img class="admin-thumb" src="${a.fotoPerfil}" alt=""></td>
+            <td><strong>${a.nombreArtistico||a.nombre}</strong>${a.esEjemplo?' <span style="font-size:11px;color:#8a8b8f;">(ejemplo)</span>':''}</td>
+            <td>${info.emoji} ${info.nombre}</td>
+            <td>${a.localidad||''}</td>
+            <td><span class="pill pill-${a.estado}">${a.estado}</span></td>
+            <td>${a.destacado?'⭐':'—'}</td>
+            <td>
+              <div class="row-actions">
+                ${a.estado==='pendiente' ? `<button class="mini-btn gold" data-action="aprobar">Aprobar</button><button class="mini-btn danger" data-action="rechazar">Rechazar</button>` : ''}
+                ${a.estado==='aprobado' ? `<button class="mini-btn gold" data-action="destacar">${a.destacado?'Quitar destacado':'Destacar'}</button><button class="mini-btn" data-action="ocultar">Ocultar</button>` : ''}
+                <button class="mini-btn danger" data-action="eliminar">Eliminar</button>
+              </div>
+            </td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>
+  `;
+  tableWrap.querySelectorAll('button[data-action]').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const tr = btn.closest('tr');
+      const id = tr.dataset.id;
+      const artista = ARTISTAS.find(a=>a.id===id);
+      const action = btn.dataset.action;
+      if(action==='aprobar') artista.estado='aprobado';
+      if(action==='rechazar' || action==='eliminar'){ ARTISTAS = ARTISTAS.filter(a=>a.id!==id); }
+      if(action==='destacar') artista.destacado = !artista.destacado;
+      if(action==='ocultar') artista.estado='pendiente';
+      await guardarDatos();
+      renderAdmin();
+    });
+  });
+}
+
+/* ---------------------------- INIT ---------------------------- */
+document.getElementById('navToggle').addEventListener('click', ()=>{
+  document.getElementById('navLinks').classList.toggle('open');
+});
+window.addEventListener('hashchange', router);
+(async function init(){
+  await cargarDatos();
+  router();
+})();
+</script>
+</body>
+</html>
