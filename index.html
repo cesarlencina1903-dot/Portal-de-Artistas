@@ -130,6 +130,9 @@
   .search-box input{width:100%;padding:11px 14px 11px 38px;border:1.5px solid var(--line);border-radius:var(--radius-pill);font-family:inherit;font-size:14px;background:var(--card);}
   .search-box input:focus{border-color:var(--blue);}
   .search-box svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);opacity:.5;}
+  .sub-filters-bar{margin-top:-16px;margin-bottom:28px;}
+  .chip-sm{padding:7px 14px;font-size:12.5px;background:var(--paper-2);}
+  .chip-sm.active{background:var(--ink);}
 
   /* ---------- GRID / CARDS (botones rápidos) ---------- */
   .grid-catalogo{display:grid;grid-template-columns:repeat(6,1fr);gap:16px;}
@@ -308,8 +311,7 @@
     <div class="hero">
       <div class="wrap hero-grid">
         <div>
-          <div class="eyebrow">DIRECTORIO CULTURAL · PARTIDO DE MAGDALENA, BUENOS AIRES</div>
-          <h1>El talento de Magdalena,<br>en <em>un solo lugar</em>.</h1>
+          <h1>El talento local,<br>en <em>un solo lugar</em>.</h1>
           <p class="lede">Un espacio para descubrir, conocer y conectar con músicos, fotógrafos, artistas plásticos, escritores y artesanos de nuestra comunidad.</p>
           <div class="hero-ctas">
             <a href="#/artistas" class="btn-primary">Explorar catálogo</a>
@@ -361,6 +363,7 @@
           <input type="text" id="searchInput" placeholder="Buscar artista, disciplina o palabra clave…">
         </div>
       </div>
+      <div id="subFiltersWrap"></div>
       <div class="grid-catalogo" id="catalogoGrid"></div>
     </div>
   </section>
@@ -456,12 +459,19 @@ const RUBROS = [
   { id:'solistas',        nombre:'Solistas',              emoji:'🎤', desc:'Artistas musicales solistas' },
   { id:'bandas',          nombre:'Bandas',                emoji:'🎸', desc:'Grupos y bandas musicales' },
   { id:'musicos',         nombre:'Músicos',                emoji:'🎹', desc:'Instrumentistas y sesionistas' },
+  { id:'danza',           nombre:'Grupos de Danza',        emoji:'💃', desc:'Grupos, compañías y academias de danza' },
   { id:'fotografia',      nombre:'Fotografía',             emoji:'📸', desc:'Fotógrafos y fotógrafas' },
   { id:'artes-plasticas', nombre:'Artes Plásticas',        emoji:'🎨', desc:'Pintura, escultura y otras técnicas' },
   { id:'poesia',          nombre:'Poesía',                 emoji:'✍️', desc:'Poetas y narradores orales' },
   { id:'literatura',      nombre:'Literatura',             emoji:'📚', desc:'Escritores y escritoras' },
   { id:'artesania',       nombre:'Artesanía',              emoji:'🧶', desc:'Artesanos y trabajadores manuales' },
+  { id:'audiovisual',     nombre:'Trabajadores Audiovisuales', emoji:'🎬', desc:'Edición de video, edición de imágenes y diseño gráfico' },
 ];
+
+/* Rubros que se subdividen en pestañas/especialidades dentro del catálogo y el formulario */
+const SUBCATEGORIAS_TABS = {
+  audiovisual: ['Editor de video', 'Editor de imágenes', 'Diseñador gráfico'],
+};
 
 function rubroInfo(id){ return RUBROS.find(r=>r.id===id) || {nombre:id, emoji:'✦'}; }
 
@@ -599,11 +609,49 @@ const SEED_ARTISTAS = [
     biografia:'PERFIL DE EJEMPLO. Lucía teje en telar mapuche y crochet, y vende sus piezas en la feria de artesanos que se organiza en la plaza los fines de semana.',
     contacto:{ instagram:'https://instagram.com/luciabarrios.ejemplo', whatsapp:'5492215550016' },
     trabajos:[ {tipo:'Producción', titulo:'Mantas de telar (colección 2024)', descripcion:'Serie de mantas en lana de oveja.', imagen:img('lucia-trabajo1',500,320)} ]},
+  // GRUPOS DE DANZA
+  { id:'a17', esEjemplo:true, estado:'aprobado', destacado:false, rubro:'danza', subcategoria:'Folklore',
+    nombre:'—', nombreArtistico:'Ballet Folklórico Raíces de Magdalena', localidad:'Magdalena, centro',
+    fotoPerfil:img('ballet-raices',600,750),
+    descripcionBreve:'Grupo de danzas folklóricas argentinas, todas las edades.',
+    biografia:'GRUPO DE EJEMPLO. El Ballet Folklórico Raíces de Magdalena reúne a bailarines de distintas edades que ensayan en el club de barrio y se presentan en fiestas patronales, peñas y actos escolares de la zona.',
+    contacto:{ whatsapp:'5492215550017', instagram:'https://instagram.com/raicesmagdalena.ejemplo' },
+    trabajos:[ {tipo:'Presentación', titulo:'Fiesta Patronal 2024', descripcion:'Cuadro de malambo y chamamé.', imagen:img('ballet-trabajo1',500,320)} ]},
+  { id:'a18', esEjemplo:true, estado:'aprobado', destacado:false, rubro:'danza', subcategoria:'Danza contemporánea',
+    nombre:'—', nombreArtistico:'Compañía de Danza Contemporánea Estuario', localidad:'Magdalena',
+    fotoPerfil:img('danza-estuario',600,750),
+    descripcionBreve:'Danza contemporánea con inspiración en el paisaje ribereño.',
+    biografia:'GRUPO DE EJEMPLO. Estuario es un colectivo de danza contemporánea que crea obras a partir del paisaje del río y los humedales de Magdalena, presentadas en la Casa de la Cultura local.',
+    contacto:{ instagram:'https://instagram.com/estuariodanza.ejemplo' },
+    trabajos:[]},
+  // TRABAJADORES AUDIOVISUALES
+  { id:'a19', esEjemplo:true, estado:'aprobado', destacado:false, rubro:'audiovisual', subcategoria:'Editor de video',
+    nombre:'Bruno Castelli', nombreArtistico:'Bruno Castelli Edición', localidad:'Magdalena, centro',
+    fotoPerfil:img('bruno-castelli',600,750),
+    descripcionBreve:'Edición de video para músicos, eventos y redes sociales.',
+    biografia:'PERFIL DE EJEMPLO. Bruno edita videoclips, coberturas de eventos y contenido para redes sociales de artistas y comercios del partido.',
+    contacto:{ whatsapp:'5492215550019', instagram:'https://instagram.com/brunocastelli.ejemplo' },
+    trabajos:[ {tipo:'Video', titulo:'Videoclip "Río Adentro"', descripcion:'Edición y color para Los Barranqueros.', imagen:img('bruno-trabajo1',500,320)} ]},
+  { id:'a20', esEjemplo:true, estado:'aprobado', destacado:false, rubro:'audiovisual', subcategoria:'Editor de imágenes',
+    nombre:'Valentina Roldán', nombreArtistico:'Vale Roldán Retoque', localidad:'Atalaya',
+    fotoPerfil:img('valentina-roldan',600,750),
+    descripcionBreve:'Retoque y edición fotográfica para artistas y emprendimientos.',
+    biografia:'PERFIL DE EJEMPLO. Valentina se dedica a la corrección de color y el retoque de fotografías de books, eventos y catálogos para productores locales.',
+    contacto:{ instagram:'https://instagram.com/valeroldan.ejemplo' },
+    trabajos:[]},
+  { id:'a21', esEjemplo:true, estado:'aprobado', destacado:false, rubro:'audiovisual', subcategoria:'Diseñador gráfico',
+    nombre:'Ian Fernández', nombreArtistico:'Ian Fernández Diseño', localidad:'Magdalena, centro',
+    fotoPerfil:img('ian-fernandez',600,750),
+    descripcionBreve:'Diseño gráfico: afiches, flyers e identidad para artistas locales.',
+    biografia:'PERFIL DE EJEMPLO. Ian diseña afiches de recitales, flyers de eventos culturales e identidad visual para artistas y ferias del Partido de Magdalena.',
+    contacto:{ whatsapp:'5492215550021', facebook:'https://facebook.com/ianfernandez.ejemplo' },
+    trabajos:[ {tipo:'Diseño', titulo:'Afiche Fiesta Patronal 2024', descripcion:'Diseño de afiche y piezas para redes.', imagen:img('ian-trabajo1',500,320)} ]},
 ];
 
 /* ---------------------------- ESTADO EN MEMORIA ---------------------------- */
 let ARTISTAS = [];
 let filtroRubroActivo = 'todos';
+let subFiltroActivo = 'todos';
 let terminoBusqueda = '';
 let adminAutenticado = false;
 let adminTabActiva = 'pendientes';
@@ -618,6 +666,15 @@ async function cargarDatos(){
   if(!ARTISTAS){
     ARTISTAS = SEED_ARTISTAS;
     await guardarDatos();
+  }else{
+    // Migración: si el sitio ya tenía datos guardados de una versión anterior,
+    // sumamos los perfiles de ejemplo de los rubros nuevos (danza, audiovisual) sin pisar lo existente.
+    const idsExistentes = new Set(ARTISTAS.map(a=>a.id));
+    const faltantes = SEED_ARTISTAS.filter(a=>!idsExistentes.has(a.id));
+    if(faltantes.length){
+      ARTISTAS = ARTISTAS.concat(faltantes);
+      await guardarDatos();
+    }
   }
 }
 async function guardarDatos(){
@@ -650,7 +707,7 @@ async function router(){
   else if(name === 'rubros'){
     showView('view-rubros'); renderRubrosFull(); setActiveNav('rubros');
   }
-  else if(name === 'rubro' && param){ filtroRubroActivo = param; terminoBusqueda=''; showView('view-artistas'); renderCatalogo(); setActiveNav('rubros'); }
+  else if(name === 'rubro' && param){ filtroRubroActivo = param; subFiltroActivo='todos'; terminoBusqueda=''; showView('view-artistas'); renderCatalogo(); setActiveNav('rubros'); }
   else if(name === 'perfil' && param){ showView('view-perfil'); renderPerfil(param); setActiveNav(''); }
   else if(name === 'registro'){ showView('view-registro'); renderFormularioRegistro(); setActiveNav('registro'); }
   else if(name === 'contacto'){ showView('view-contacto'); setActiveNav('contacto'); }
@@ -717,6 +774,13 @@ function renderInicio(){
 }
 
 /* ---------------------------- CATALOGO ---------------------------- */
+function subChipsHtml(){
+  const opciones = SUBCATEGORIAS_TABS[filtroRubroActivo];
+  if(!opciones) return '';
+  const todos = `<button class="chip chip-sm ${subFiltroActivo==='todos'?'active':''}" data-sub="todos">Todas las especialidades</button>`;
+  const resto = opciones.map(o=>`<button class="chip chip-sm ${subFiltroActivo===o?'active':''}" data-sub="${o}">${o}</button>`).join('');
+  return `<div class="filters-bar sub-filters-bar">${todos}${resto}</div>`;
+}
 function renderCatalogo(){
   document.getElementById('filtersBar').innerHTML = chipsRubrosHtml() + `
     <div class="search-box">
@@ -724,19 +788,34 @@ function renderCatalogo(){
       <input type="text" id="searchInput" placeholder="Buscar artista, disciplina o palabra clave…" value="${terminoBusqueda}">
     </div>`;
   document.getElementById('filtersBar').querySelectorAll('.chip').forEach(chip=>{
-    chip.addEventListener('click', ()=>{ filtroRubroActivo = chip.dataset.rubro; pintarGrid(); actualizarChipsActivos(); });
+    chip.addEventListener('click', ()=>{
+      filtroRubroActivo = chip.dataset.rubro;
+      subFiltroActivo = 'todos';
+      renderCatalogo();
+    });
   });
   document.getElementById('filtersBar').querySelector('#searchInput').addEventListener('input', (e)=>{
     terminoBusqueda = e.target.value.toLowerCase(); pintarGrid();
+  });
+  const subWrap = document.getElementById('subFiltersWrap');
+  subWrap.innerHTML = subChipsHtml();
+  subWrap.querySelectorAll('.chip').forEach(chip=>{
+    chip.addEventListener('click', ()=>{ subFiltroActivo = chip.dataset.sub; pintarGrid(); actualizarSubChipsActivos(); });
   });
   pintarGrid();
 }
 function actualizarChipsActivos(){
   document.querySelectorAll('#filtersBar .chip').forEach(c=>c.classList.toggle('active', c.dataset.rubro===filtroRubroActivo));
 }
+function actualizarSubChipsActivos(){
+  document.querySelectorAll('#subFiltersWrap .chip').forEach(c=>c.classList.toggle('active', c.dataset.sub===subFiltroActivo));
+}
 function pintarGrid(){
   let lista = ARTISTAS.filter(a=>a.estado==='aprobado');
   if(filtroRubroActivo!=='todos') lista = lista.filter(a=>a.rubro===filtroRubroActivo);
+  if(SUBCATEGORIAS_TABS[filtroRubroActivo] && subFiltroActivo!=='todos'){
+    lista = lista.filter(a=>a.subcategoria===subFiltroActivo);
+  }
   if(terminoBusqueda){
     const q = terminoBusqueda;
     lista = lista.filter(a=>{
@@ -823,7 +902,7 @@ function renderPerfil(id){
       </div>
     </div>
     <div class="perfil-section">
-      <h2>Sobre ${a.nombreArtistico?'el/la artista':'la banda'}</h2>
+      <h2>Sobre ${(a.nombre && a.nombre!=='—') ? 'el/la artista' : 'el grupo'}</h2>
       <p class="bio-text">${a.biografia||'Sin biografía cargada.'}</p>
     </div>
     ${trabajosHtml}
@@ -845,12 +924,12 @@ function renderFormularioRegistro(){
         <div class="field-row">
           <div class="field">
             <label>Rubro *</label>
-            <select name="rubro" required>
+            <select name="rubro" id="regRubro" required>
               <option value="">Elegí un rubro…</option>
               ${RUBROS.map(r=>`<option value="${r.id}">${r.emoji} ${r.nombre}</option>`).join('')}
             </select>
           </div>
-          <div class="field"><label>Subcategoría <span class="opt">(ej: folklore, retrato…)</span></label><input type="text" name="subcategoria"></div>
+          <div class="field" id="subcategoriaWrap"><label>Subcategoría <span class="opt">(ej: folklore, retrato…)</span></label><input type="text" name="subcategoria"></div>
         </div>
         <div class="field-row">
           <div class="field"><label>Localidad *</label><input type="text" name="localidad" placeholder="Ej: Magdalena centro, Atalaya, Vieytes…" required></div>
@@ -894,6 +973,21 @@ function renderFormularioRegistro(){
     </form>
     <div id="registroOk" style="display:none;margin-top:20px;" class="form-msg-ok"></div>
   `;
+  function actualizarCampoSubcategoria(){
+    const rubro = document.getElementById('regRubro').value;
+    const wrap = document.getElementById('subcategoriaWrap');
+    const opciones = SUBCATEGORIAS_TABS[rubro];
+    if(opciones){
+      wrap.innerHTML = `<label>Especialidad *</label>
+        <select name="subcategoria" required>
+          <option value="">Elegí una especialidad…</option>
+          ${opciones.map(o=>`<option value="${o}">${o}</option>`).join('')}
+        </select>`;
+    }else{
+      wrap.innerHTML = `<label>Subcategoría <span class="opt">(ej: folklore, retrato…)</span></label><input type="text" name="subcategoria">`;
+    }
+  }
+  document.getElementById('regRubro').addEventListener('change', actualizarCampoSubcategoria);
   document.getElementById('formRegistro').addEventListener('submit', async (e)=>{
     e.preventDefault();
     const fd = new FormData(e.target);
