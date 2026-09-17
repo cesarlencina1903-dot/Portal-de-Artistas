@@ -47,7 +47,7 @@
   a{color:inherit;text-decoration:none;}
   button{font-family:inherit;cursor:pointer;}
   img{max-width:100%;display:block;}
-  .wrap{max-width:1180px;margin:0 auto;padding:0 24px;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 32px;}
   :focus-visible{outline:2px solid var(--blue);outline-offset:2px;}
 
   /* ---------- NAV ---------- */
@@ -58,7 +58,7 @@
     border-bottom:1px solid var(--line);
   }
   .nav-inner{
-    max-width:1180px;margin:0 auto;padding:14px 24px;
+    max-width:1180px;margin:0 auto;padding:14px 32px;
     display:flex;align-items:center;justify-content:space-between;gap:16px;
   }
   .brand{display:flex;align-items:center;gap:10px;}
@@ -253,17 +253,17 @@
     .field-row{grid-template-columns:1fr;}
   }
   @media (max-width:640px){
-    nav.links{position:fixed;top:64px;left:0;right:0;background:var(--paper);border-bottom:1px solid var(--line);flex-direction:column;align-items:flex-start;padding:16px 24px;gap:16px;display:none;}
+    nav.links{position:fixed;top:64px;left:0;right:0;background:var(--paper);border-bottom:1px solid var(--line);flex-direction:column;align-items:flex-start;padding:16px 32px;gap:16px;display:none;}
     nav.links.open{display:flex;}
     .nav-toggle{display:block;}
     .btn-registrar{order:5;}
     .hero h1{font-size:32px;}
     .hero-ctas{flex-direction:column;align-items:stretch;}
     .hero-stats{gap:20px;flex-wrap:wrap;}
-    .grid-catalogo{grid-template-columns:repeat(3,1fr);gap:10px;}
-    .card-artista{padding:9px;}
-    .card-body h3{font-size:12.5px;}
-    .card-rubro{font-size:9.5px;}
+    .grid-catalogo{grid-template-columns:repeat(2,1fr);gap:14px;}
+    .card-artista{padding:12px;}
+    .card-body h3{font-size:13.5px;}
+    .card-rubro{font-size:10.5px;}
     .rubros-grid{grid-template-columns:1fr;}
     .perfil-hero{grid-template-columns:1fr;}
     .perfil-foto{max-width:220px;}
@@ -477,6 +477,31 @@ function rubroInfo(id){ return RUBROS.find(r=>r.id===id) || {nombre:id, emoji:'�
 
 function img(seed, w=600, h=750){ return `https://picsum.photos/seed/${seed}/${w}/${h}`; }
 
+/* ---------------------------- SEGURIDAD: sanitización de datos ----------------------------
+   Todo texto que carga un artista desde "Registrá tu perfil" es contenido NO confiable:
+   se escapa siempre antes de insertarlo en el HTML para evitar inyección de código (XSS),
+   y los enlaces se validan para permitir sólo http(s), nunca protocolos ejecutables. */
+function escapeHtml(str){
+  if(str===undefined || str===null) return '';
+  return String(str)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;');
+}
+function urlSegura(url){
+  if(!url) return '';
+  const limpia = String(url).trim();
+  if(/^https?:\/\//i.test(limpia)) return escapeHtml(limpia);
+  return '';
+}
+function imagenSegura(url, fallbackSeed){
+  const limpia = url ? String(url).trim() : '';
+  if(/^https?:\/\//i.test(limpia)) return escapeHtml(limpia);
+  return img(fallbackSeed || ('perfil-'+Date.now()));
+}
+
 const SEED_ARTISTAS = [
   // SOLISTAS
   { id:'a1', esEjemplo:true, estado:'aprobado', destacado:true, rubro:'solistas', subcategoria:'Folklore',
@@ -654,6 +679,7 @@ let filtroRubroActivo = 'todos';
 let subFiltroActivo = 'todos';
 let terminoBusqueda = '';
 let adminAutenticado = false;
+let intentosAdminFallidos = 0;
 let adminTabActiva = 'pendientes';
 const ADMIN_PASSWORD = 'magdalena2026';
 
@@ -723,16 +749,16 @@ function chipsRubrosHtml(){
 }
 function cardArtistaHtml(a){
   const info = rubroInfo(a.rubro);
-  const nombreMostrar = a.nombreArtistico || a.nombre;
+  const nombreMostrar = escapeHtml(a.nombreArtistico || a.nombre);
   return `
-  <a href="#/perfil/${a.id}" class="card-artista" title="${nombreMostrar} — ${info.nombre}">
+  <a href="#/perfil/${encodeURIComponent(a.id)}" class="card-artista" title="${nombreMostrar} — ${escapeHtml(info.nombre)}">
     <div class="card-foto">
-      <img src="${a.fotoPerfil}" alt="Foto de ${nombreMostrar}" loading="lazy">
+      <img src="${imagenSegura(a.fotoPerfil, a.id)}" alt="Foto de ${nombreMostrar}" loading="lazy">
       ${a.esEjemplo?'<span class="card-badge">Ejemplo</span>':''}
     </div>
     <div class="card-body">
       <h3>${nombreMostrar}</h3>
-      <div class="card-rubro">${info.emoji} ${info.nombre}</div>
+      <div class="card-rubro">${info.emoji} ${escapeHtml(info.nombre)}</div>
     </div>
   </a>`;
 }
@@ -746,7 +772,7 @@ function renderInicio(){
     <div><b>${aprobados.filter(a=>a.destacado).length}</b><span>Destacados este mes</span></div>
   `;
   const seedsMosaico = aprobados.slice(0,6);
-  document.getElementById('heroMosaic').innerHTML = seedsMosaico.map(a=>`<div><img src="${a.fotoPerfil}" alt=""></div>`).join('');
+  document.getElementById('heroMosaic').innerHTML = seedsMosaico.map(a=>`<div><img src="${imagenSegura(a.fotoPerfil,a.id)}" alt=""></div>`).join('');
 
   const destacados = aprobados.filter(a=>a.destacado);
   const destWrap = document.getElementById('destacadosSection');
@@ -755,10 +781,11 @@ function renderInicio(){
     destWrap.style.display='block';
     document.getElementById('destacadosScroll').innerHTML = destacados.map(a=>{
       const info = rubroInfo(a.rubro);
-      return `<a href="#/perfil/${a.id}" class="dest-card">
-        <div class="dc-foto"><img src="${a.fotoPerfil}" alt=""></div>
-        <h4>${a.nombreArtistico||a.nombre}</h4>
-        <div class="dc-rubro">${info.emoji} ${info.nombre}</div>
+      const nombreMostrar = escapeHtml(a.nombreArtistico||a.nombre);
+      return `<a href="#/perfil/${encodeURIComponent(a.id)}" class="dest-card">
+        <div class="dc-foto"><img src="${imagenSegura(a.fotoPerfil,a.id)}" alt=""></div>
+        <h4>${nombreMostrar}</h4>
+        <div class="dc-rubro">${info.emoji} ${escapeHtml(info.nombre)}</div>
       </a>`;
     }).join('');
   }
@@ -850,16 +877,18 @@ function botonesContacto(c){
   if(!c) return '';
   let out = '';
   if(c.whatsapp){
-    const num = c.whatsapp.replace(/[^0-9]/g,'');
-    out += `<a class="btn-contacto btn-wa" href="https://wa.me/${num}" target="_blank" rel="noopener">💬 WhatsApp</a>`;
+    const num = String(c.whatsapp).replace(/[^0-9]/g,'').slice(0,15);
+    if(num) out += `<a class="btn-contacto btn-wa" href="https://wa.me/${num}" target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>`;
   }
-  if(c.instagram) out += `<a class="btn-contacto btn-ig" href="${c.instagram}" target="_blank" rel="noopener">📷 Instagram</a>`;
-  if(c.facebook) out += `<a class="btn-contacto btn-fb" href="${c.facebook}" target="_blank" rel="noopener">👍 Facebook</a>`;
-  if(c.youtube) out += `<a class="btn-contacto btn-ot" href="${c.youtube}" target="_blank" rel="noopener">▶ YouTube</a>`;
-  if(c.tiktok) out += `<a class="btn-contacto btn-ot" href="${c.tiktok}" target="_blank" rel="noopener">🎵 TikTok</a>`;
-  if(c.spotify) out += `<a class="btn-contacto btn-ot" href="${c.spotify}" target="_blank" rel="noopener">🎧 Spotify</a>`;
-  if(c.sitioweb) out += `<a class="btn-contacto btn-ot" href="${c.sitioweb}" target="_blank" rel="noopener">🌐 Sitio web</a>`;
-  if(c.email) out += `<a class="btn-contacto btn-ot" href="mailto:${c.email}">✉ Email</a>`;
+  const ig = urlSegura(c.instagram); if(ig) out += `<a class="btn-contacto btn-ig" href="${ig}" target="_blank" rel="noopener noreferrer">📷 Instagram</a>`;
+  const fb = urlSegura(c.facebook); if(fb) out += `<a class="btn-contacto btn-fb" href="${fb}" target="_blank" rel="noopener noreferrer">👍 Facebook</a>`;
+  const yt = urlSegura(c.youtube); if(yt) out += `<a class="btn-contacto btn-ot" href="${yt}" target="_blank" rel="noopener noreferrer">▶ YouTube</a>`;
+  const tk = urlSegura(c.tiktok); if(tk) out += `<a class="btn-contacto btn-ot" href="${tk}" target="_blank" rel="noopener noreferrer">🎵 TikTok</a>`;
+  const sp = urlSegura(c.spotify); if(sp) out += `<a class="btn-contacto btn-ot" href="${sp}" target="_blank" rel="noopener noreferrer">🎧 Spotify</a>`;
+  const web = urlSegura(c.sitioweb); if(web) out += `<a class="btn-contacto btn-ot" href="${web}" target="_blank" rel="noopener noreferrer">🌐 Sitio web</a>`;
+  if(c.email && /^[^\s@<>"']+@[^\s@<>"']+\.[^\s@<>"']+$/.test(c.email)){
+    out += `<a class="btn-contacto btn-ot" href="mailto:${escapeHtml(c.email)}">✉ Email</a>`;
+  }
   return out;
 }
 function renderPerfil(id){
@@ -870,18 +899,19 @@ function renderPerfil(id){
     return;
   }
   const info = rubroInfo(a.rubro);
+  const nombreMostrar = escapeHtml(a.nombreArtistico||a.nombre);
   const trabajosHtml = (a.trabajos&&a.trabajos.length) ? `
     <div class="perfil-section">
       <h2>Trabajos y producciones</h2>
-      <p class="ps-sub">Una selección de obras, proyectos y presentaciones de ${a.nombreArtistico||a.nombre}.</p>
+      <p class="ps-sub">Una selección de obras, proyectos y presentaciones de ${nombreMostrar}.</p>
       <div class="trabajos-grid">
         ${a.trabajos.map(t=>`
           <div class="trabajo-card">
-            ${t.imagen?`<img src="${t.imagen}" alt="${t.titulo}">`:''}
+            ${t.imagen?`<img src="${imagenSegura(t.imagen)}" alt="${escapeHtml(t.titulo)}">`:''}
             <div class="tc-body">
-              <div class="tc-tipo">${t.tipo}</div>
-              <h4>${t.titulo}</h4>
-              <p>${t.descripcion||''}</p>
+              <div class="tc-tipo">${escapeHtml(t.tipo)}</div>
+              <h4>${escapeHtml(t.titulo)}</h4>
+              <p>${escapeHtml(t.descripcion||'')}</p>
             </div>
           </div>`).join('')}
       </div>
@@ -890,20 +920,20 @@ function renderPerfil(id){
   cont.innerHTML = `
     <a href="#/artistas" class="perfil-back">← Volver al catálogo</a>
     <div class="perfil-hero">
-      <div class="perfil-foto"><img src="${a.fotoPerfil}" alt="Foto de ${a.nombreArtistico||a.nombre}"></div>
+      <div class="perfil-foto"><img src="${imagenSegura(a.fotoPerfil,a.id)}" alt="Foto de ${nombreMostrar}"></div>
       <div class="perfil-info">
-        <div class="card-rubro">${info.emoji} ${info.nombre}${a.subcategoria?' · '+a.subcategoria:''}</div>
-        <h1>${a.nombreArtistico||a.nombre}</h1>
-        ${a.nombreArtistico && a.nombre && a.nombre!=='—' ? `<div class="p-nombreartistico">${a.nombre}</div>`:''}
-        <div class="p-loc">📍 ${a.localidad||'Partido de Magdalena'}</div>
-        <p class="p-desc">${a.descripcionBreve||''}</p>
+        <div class="card-rubro">${info.emoji} ${escapeHtml(info.nombre)}${a.subcategoria?' · '+escapeHtml(a.subcategoria):''}</div>
+        <h1>${nombreMostrar}</h1>
+        ${a.nombreArtistico && a.nombre && a.nombre!=='—' ? `<div class="p-nombreartistico">${escapeHtml(a.nombre)}</div>`:''}
+        <div class="p-loc">📍 ${escapeHtml(a.localidad||'Partido de Magdalena')}</div>
+        <p class="p-desc">${escapeHtml(a.descripcionBreve||'')}</p>
         <div class="contacto-botones">${botonesContacto(a.contacto)}</div>
         ${a.esEjemplo?'<p style="margin-top:16px;font-size:12px;color:#8a8b8f;">* Perfil de ejemplo, incluido a modo demostrativo.</p>':''}
       </div>
     </div>
     <div class="perfil-section">
       <h2>Sobre ${(a.nombre && a.nombre!=='—') ? 'el/la artista' : 'el grupo'}</h2>
-      <p class="bio-text">${a.biografia||'Sin biografía cargada.'}</p>
+      <p class="bio-text">${escapeHtml(a.biografia)||'Sin biografía cargada.'}</p>
     </div>
     ${trabajosHtml}
   `;
@@ -914,12 +944,17 @@ function renderFormularioRegistro(){
   const wrap = document.getElementById('registroFormWrap');
   wrap.innerHTML = `
     <form class="form-card" id="formRegistro" novalidate>
+      <!-- Campo trampa anti-spam: invisible para personas, los bots suelen completarlo -->
+      <div style="position:absolute;left:-9999px;opacity:0;height:0;overflow:hidden;" aria-hidden="true">
+        <label>No completar este campo</label>
+        <input type="text" name="pagina_web_extra" tabindex="-1" autocomplete="off">
+      </div>
       <fieldset>
         <legend>Datos personales / artísticos</legend>
         <div class="fs-hint">Contanos quién sos y a qué te dedicás.</div>
         <div class="field-row">
-          <div class="field"><label>Nombre y apellido *</label><input type="text" name="nombre" required></div>
-          <div class="field"><label>Nombre artístico <span class="opt">(opcional)</span></label><input type="text" name="nombreArtistico"></div>
+          <div class="field"><label>Nombre y apellido *</label><input type="text" name="nombre" maxlength="80" required></div>
+          <div class="field"><label>Nombre artístico <span class="opt">(opcional)</span></label><input type="text" name="nombreArtistico" maxlength="80"></div>
         </div>
         <div class="field-row">
           <div class="field">
@@ -929,40 +964,40 @@ function renderFormularioRegistro(){
               ${RUBROS.map(r=>`<option value="${r.id}">${r.emoji} ${r.nombre}</option>`).join('')}
             </select>
           </div>
-          <div class="field" id="subcategoriaWrap"><label>Subcategoría <span class="opt">(ej: folklore, retrato…)</span></label><input type="text" name="subcategoria"></div>
+          <div class="field" id="subcategoriaWrap"><label>Subcategoría <span class="opt">(ej: folklore, retrato…)</span></label><input type="text" name="subcategoria" maxlength="60"></div>
         </div>
         <div class="field-row">
-          <div class="field"><label>Localidad *</label><input type="text" name="localidad" placeholder="Ej: Magdalena centro, Atalaya, Vieytes…" required></div>
-          <div class="field"><label>Foto de perfil (URL) <span class="opt">(opcional)</span></label><input type="url" name="fotoPerfil" placeholder="https://…"></div>
+          <div class="field"><label>Localidad *</label><input type="text" name="localidad" maxlength="80" placeholder="Ej: Magdalena centro, Atalaya, Vieytes…" required></div>
+          <div class="field"><label>Foto de perfil (URL) <span class="opt">(opcional, debe empezar con https://)</span></label><input type="url" name="fotoPerfil" maxlength="500" placeholder="https://…"></div>
         </div>
         <div class="field full"><label>Descripción breve *</label><input type="text" name="descripcionBreve" maxlength="120" placeholder="Una línea que te describa (máx. 120 caracteres)" required></div>
-        <div class="field full"><label>Biografía</label><textarea name="biografia" placeholder="Contá tu recorrido, formación y motivaciones…"></textarea></div>
+        <div class="field full"><label>Biografía</label><textarea name="biografia" maxlength="2000" placeholder="Contá tu recorrido, formación y motivaciones…"></textarea></div>
       </fieldset>
 
       <fieldset>
         <legend>Trayectoria</legend>
         <div class="fs-hint">Un trabajo destacado para mostrar en tu perfil (podés cargar más luego desde el panel de administración).</div>
         <div class="field-row">
-          <div class="field"><label>Título del trabajo <span class="opt">(opcional)</span></label><input type="text" name="trabajoTitulo" placeholder="Ej: nombre de la canción, libro, obra…"></div>
-          <div class="field"><label>Tipo <span class="opt">(opcional)</span></label><input type="text" name="trabajoTipo" placeholder="Ej: canción, libro, obra, exposición…"></div>
+          <div class="field"><label>Título del trabajo <span class="opt">(opcional)</span></label><input type="text" name="trabajoTitulo" maxlength="120" placeholder="Ej: nombre de la canción, libro, obra…"></div>
+          <div class="field"><label>Tipo <span class="opt">(opcional)</span></label><input type="text" name="trabajoTipo" maxlength="60" placeholder="Ej: canción, libro, obra, exposición…"></div>
         </div>
-        <div class="field full"><label>Descripción <span class="opt">(opcional)</span></label><input type="text" name="trabajoDescripcion"></div>
+        <div class="field full"><label>Descripción <span class="opt">(opcional)</span></label><input type="text" name="trabajoDescripcion" maxlength="300"></div>
       </fieldset>
 
       <fieldset>
         <legend>Contacto</legend>
-        <div class="fs-hint">Sólo se mostrarán los botones de los datos que completes.</div>
+        <div class="fs-hint">Sólo se mostrarán los botones de los datos que completes. Los enlaces deben empezar con https://.</div>
         <div class="field-row">
-          <div class="field"><label>WhatsApp <span class="opt">(con código de país, ej: 549221…)</span></label><input type="text" name="whatsapp"></div>
-          <div class="field"><label>Email</label><input type="email" name="email"></div>
+          <div class="field"><label>WhatsApp <span class="opt">(con código de país, ej: 549221…)</span></label><input type="text" name="whatsapp" maxlength="20"></div>
+          <div class="field"><label>Email</label><input type="email" name="email" maxlength="120"></div>
         </div>
         <div class="field-row">
-          <div class="field"><label>Instagram (URL)</label><input type="url" name="instagram"></div>
-          <div class="field"><label>Facebook (URL)</label><input type="url" name="facebook"></div>
+          <div class="field"><label>Instagram (URL)</label><input type="url" name="instagram" maxlength="300"></div>
+          <div class="field"><label>Facebook (URL)</label><input type="url" name="facebook" maxlength="300"></div>
         </div>
         <div class="field-row">
-          <div class="field"><label>YouTube (URL)</label><input type="url" name="youtube"></div>
-          <div class="field"><label>Sitio web (URL)</label><input type="url" name="sitioweb"></div>
+          <div class="field"><label>YouTube (URL)</label><input type="url" name="youtube" maxlength="300"></div>
+          <div class="field"><label>Sitio web (URL)</label><input type="url" name="sitioweb" maxlength="300"></div>
         </div>
       </fieldset>
 
@@ -992,32 +1027,45 @@ function renderFormularioRegistro(){
     e.preventDefault();
     const fd = new FormData(e.target);
     const data = Object.fromEntries(fd.entries());
+    // Campo trampa: si un bot lo completó, simulamos éxito pero no guardamos nada.
+    if(data.pagina_web_extra){
+      e.target.style.display='none';
+      const okBot = document.getElementById('registroOk');
+      okBot.style.display='block';
+      okBot.innerHTML = `<strong>¡Gracias!</strong> Tu perfil fue enviado y quedó pendiente de aprobación.`;
+      return;
+    }
     if(!data.nombre || !data.rubro || !data.localidad || !data.descripcionBreve){ return; }
+    const t = (s)=> (s||'').toString().trim();
     const nuevo = {
       id: 'u'+Date.now(),
       esEjemplo:false,
       estado:'pendiente',
       destacado:false,
-      rubro:data.rubro,
-      subcategoria:data.subcategoria||'',
-      nombre:data.nombre,
-      nombreArtistico:data.nombreArtistico||'',
-      localidad:data.localidad,
-      fotoPerfil: data.fotoPerfil || img('perfil-'+Date.now()),
-      descripcionBreve:data.descripcionBreve,
-      biografia:data.biografia||'',
+      rubro:t(data.rubro),
+      subcategoria:t(data.subcategoria),
+      nombre:t(data.nombre),
+      nombreArtistico:t(data.nombreArtistico),
+      localidad:t(data.localidad),
+      fotoPerfil: imagenSegura(data.fotoPerfil, 'u'+Date.now()),
+      descripcionBreve:t(data.descripcionBreve),
+      biografia:t(data.biografia),
       contacto:{
-        whatsapp:data.whatsapp||'', email:data.email||'', instagram:data.instagram||'',
-        facebook:data.facebook||'', youtube:data.youtube||'', sitioweb:data.sitioweb||''
+        whatsapp: t(data.whatsapp).replace(/[^0-9]/g,'').slice(0,15),
+        email: /^[^\s@<>"']+@[^\s@<>"']+\.[^\s@<>"']+$/.test(t(data.email)) ? t(data.email) : '',
+        instagram: urlSegura(data.instagram),
+        facebook: urlSegura(data.facebook),
+        youtube: urlSegura(data.youtube),
+        sitioweb: urlSegura(data.sitioweb)
       },
-      trabajos: data.trabajoTitulo ? [{tipo:data.trabajoTipo||'Trabajo', titulo:data.trabajoTitulo, descripcion:data.trabajoDescripcion||'', imagen:''}] : []
+      trabajos: t(data.trabajoTitulo) ? [{tipo:t(data.trabajoTipo)||'Trabajo', titulo:t(data.trabajoTitulo), descripcion:t(data.trabajoDescripcion), imagen:''}] : []
     };
     ARTISTAS.push(nuevo);
     await guardarDatos();
     e.target.style.display='none';
     const ok = document.getElementById('registroOk');
     ok.style.display='block';
-    ok.innerHTML = `<strong>¡Gracias, ${nuevo.nombre.split(' ')[0]}!</strong> Tu perfil fue enviado y quedó <strong>pendiente de aprobación</strong>. El equipo del portal lo va a revisar antes de publicarlo en el catálogo.`;
+    ok.innerHTML = `<strong>¡Gracias, ${escapeHtml(nuevo.nombre.split(' ')[0])}!</strong> Tu perfil fue enviado y quedó <strong>pendiente de aprobación</strong>. El equipo del portal lo va a revisar antes de publicarlo en el catálogo.`;
   });
 }
 
@@ -1037,8 +1085,21 @@ function renderAdmin(){
       </div>`;
     document.getElementById('adminEnter').addEventListener('click', ()=>{
       const val = document.getElementById('adminPass').value;
-      if(val === ADMIN_PASSWORD){ adminAutenticado = true; renderAdmin(); }
-      else{ document.getElementById('adminError').style.display='block'; }
+      if(val === ADMIN_PASSWORD){
+        adminAutenticado = true; intentosAdminFallidos = 0; renderAdmin();
+      }else{
+        intentosAdminFallidos++;
+        const err = document.getElementById('adminError');
+        if(intentosAdminFallidos >= 5){
+          err.textContent = 'Demasiados intentos fallidos. Cerrá y volvé a abrir esta página para reintentar.';
+          err.style.display='block';
+          document.getElementById('adminEnter').disabled = true;
+          document.getElementById('adminPass').disabled = true;
+        }else{
+          err.textContent = 'Contraseña incorrecta.';
+          err.style.display='block';
+        }
+      }
     });
     document.getElementById('adminPass').addEventListener('keydown', (e)=>{ if(e.key==='Enter') document.getElementById('adminEnter').click(); });
     return;
@@ -1073,11 +1134,12 @@ function renderAdmin(){
       <tbody>
         ${listaActiva.map(a=>{
           const info = rubroInfo(a.rubro);
-          return `<tr data-id="${a.id}">
-            <td><img class="admin-thumb" src="${a.fotoPerfil}" alt=""></td>
-            <td><strong>${a.nombreArtistico||a.nombre}</strong>${a.esEjemplo?' <span style="font-size:11px;color:#8a8b8f;">(ejemplo)</span>':''}</td>
-            <td>${info.emoji} ${info.nombre}</td>
-            <td>${a.localidad||''}</td>
+          const nombreMostrar = escapeHtml(a.nombreArtistico||a.nombre);
+          return `<tr data-id="${escapeHtml(a.id)}">
+            <td><img class="admin-thumb" src="${imagenSegura(a.fotoPerfil,a.id)}" alt=""></td>
+            <td><strong>${nombreMostrar}</strong>${a.esEjemplo?' <span style="font-size:11px;color:#8a8b8f;">(ejemplo)</span>':''}</td>
+            <td>${info.emoji} ${escapeHtml(info.nombre)}</td>
+            <td>${escapeHtml(a.localidad||'')}</td>
             <td><span class="pill pill-${a.estado}">${a.estado}</span></td>
             <td>${a.destacado?'⭐':'—'}</td>
             <td>
@@ -1120,3 +1182,4 @@ window.addEventListener('hashchange', router);
 </script>
 </body>
 </html>
+
