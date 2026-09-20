@@ -411,7 +411,7 @@
       <div class="form-card" style="max-width:600px;">
         <p style="font-size:15px;margin-bottom:18px;">Este portal es un espacio abierto a la comunidad artística del Partido de Magdalena. Para consultas institucionales, podés escribir a:</p>
         <p style="font-family:'Sora',sans-serif;font-weight:700;font-size:19px;margin-bottom:6px;">portaldelartista.magdalena@gmail.com</p>
-        <p style="font-size:13.5px;color:#6b6c70;">Municipio del Partido de Magdalena, Provincia de Buenos Aires.</p>
+        <p style="font-size:13.5px;color:#6b6c70;">EPA Magdalena (partido vecinal de Magdalena), Provincia de Buenos Aires.</p>
       </div>
     </div>
   </section>
@@ -461,7 +461,7 @@ const RUBROS = [
   { id:'musicos',         nombre:'Músicos',                emoji:'🎹', desc:'Instrumentistas y sesionistas' },
   { id:'danza',           nombre:'Grupos de Danza',        emoji:'💃', desc:'Grupos, compañías y academias de danza' },
   { id:'fotografia',      nombre:'Fotografía',             emoji:'📸', desc:'Fotógrafos y fotógrafas' },
-  { id:'artes-plasticas', nombre:'Artes Plásticas',        emoji:'🎨', desc:'Pintura, escultura y otras técnicas' },
+  { id:'artes-plasticas', nombre:'Artistas Visuales',        emoji:'🎨', desc:'Pintura, escultura, cerámica y otras técnicas visuales' },
   { id:'poesia',          nombre:'Poesía',                 emoji:'✍️', desc:'Poetas y narradores orales' },
   { id:'literatura',      nombre:'Literatura',             emoji:'📚', desc:'Escritores y escritoras' },
   { id:'artesania',       nombre:'Artesanía',              emoji:'🧶', desc:'Artesanos y trabajadores manuales' },
@@ -471,6 +471,7 @@ const RUBROS = [
 /* Rubros que se subdividen en pestañas/especialidades dentro del catálogo y el formulario */
 const SUBCATEGORIAS_TABS = {
   audiovisual: ['Editor de video', 'Editor de imágenes', 'Diseñador gráfico'],
+  'artes-plasticas': ['Pintor/a', 'Ilustrador/a', 'Ceramista', 'Grabador/a', 'Maquillador/a', 'Escenógrafo/a', 'Director/a', 'Productor/a'],
 };
 
 function rubroInfo(id){ return RUBROS.find(r=>r.id===id) || {nombre:id, emoji:'✦'}; }
@@ -575,14 +576,14 @@ const SEED_ARTISTAS = [
     contacto:{ whatsapp:'5492215550008', facebook:'https://facebook.com/juliferraro.ejemplo' },
     trabajos:[]},
   // ARTES PLASTICAS
-  { id:'a9', esEjemplo:true, estado:'aprobado', destacado:false, rubro:'artes-plasticas', subcategoria:'Pintura',
+  { id:'a9', esEjemplo:true, estado:'aprobado', destacado:false, rubro:'artes-plasticas', subcategoria:'Pintor/a',
     nombre:'Norberto Aguirre', nombreArtistico:'Norberto Aguirre', localidad:'Magdalena, centro',
     fotoPerfil:img('norberto-aguirre',600,750),
     descripcionBreve:'Pintor paisajista, óleo sobre tela.',
     biografia:'PERFIL DE EJEMPLO. Norberto pinta desde hace más de veinte años, retratando el paisaje pampeano y costero. Expone habitualmente en ferias culturales del partido.',
     contacto:{ whatsapp:'5492215550009' },
     trabajos:[ {tipo:'Obra', titulo:'Atardecer en las Barrancas (óleo, 2021)', descripcion:'Óleo sobre tela, 60x80cm.', imagen:img('norberto-trabajo1',500,320)} ]},
-  { id:'a10', esEjemplo:true, estado:'aprobado', destacado:true, rubro:'artes-plasticas', subcategoria:'Escultura',
+  { id:'a10', esEjemplo:true, estado:'aprobado', destacado:true, rubro:'artes-plasticas', subcategoria:'Ceramista',
     nombre:'Paula Miranda', nombreArtistico:'Paula Miranda', localidad:'Magdalena',
     fotoPerfil:img('paula-miranda',600,750),
     descripcionBreve:'Escultora en cerámica y materiales recuperados.',
@@ -697,8 +698,21 @@ async function cargarDatos(){
     // sumamos los perfiles de ejemplo de los rubros nuevos (danza, audiovisual) sin pisar lo existente.
     const idsExistentes = new Set(ARTISTAS.map(a=>a.id));
     const faltantes = SEED_ARTISTAS.filter(a=>!idsExistentes.has(a.id));
+    let cambios = false;
     if(faltantes.length){
       ARTISTAS = ARTISTAS.concat(faltantes);
+      cambios = true;
+    }
+    // Normaliza las subcategorías viejas de los ejemplos de "Artistas Visuales"
+    // a la nueva lista cerrada de especialidades.
+    const RENOMBRES_SUBCATEGORIA = { 'a9':'Pintor/a', 'a10':'Ceramista' };
+    ARTISTAS.forEach(a=>{
+      if(RENOMBRES_SUBCATEGORIA[a.id] && a.esEjemplo && a.subcategoria !== RENOMBRES_SUBCATEGORIA[a.id]){
+        a.subcategoria = RENOMBRES_SUBCATEGORIA[a.id];
+        cambios = true;
+      }
+    });
+    if(cambios){
       await guardarDatos();
     }
   }
@@ -1182,4 +1196,3 @@ window.addEventListener('hashchange', router);
 </script>
 </body>
 </html>
-
