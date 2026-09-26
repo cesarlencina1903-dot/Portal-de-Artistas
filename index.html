@@ -445,6 +445,7 @@
     <div class="footer-bottom">
       <span>© 2026 Portal del Artista Local — Partido de Magdalena.</span>
       <span>Los perfiles marcados "EJEMPLO" son ficticios y se incluyen a modo demostrativo.</span>
+      <span>Impulsado por EPA</span>
     </div>
   </div>
 </footer>
@@ -682,7 +683,14 @@ let terminoBusqueda = '';
 let adminAutenticado = false;
 let intentosAdminFallidos = 0;
 let adminTabActiva = 'pendientes';
-const ADMIN_PASSWORD = 'magdalena2026';
+// La contraseña NO se guarda en texto plano: se guarda su huella SHA-256.
+// Así, alguien que abra el código fuente no puede leer la contraseña directamente.
+const ADMIN_PASSWORD_HASH = '35464f8e4e76ae6bd4d9ec5ff3882e7d51967e38fb0eb5fb7d3aa186f01dadba';
+async function sha256Hex(texto){
+  const datos = new TextEncoder().encode(texto);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', datos);
+  return Array.from(new Uint8Array(hashBuffer)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
 
 /* ---------------------------- PERSISTENCIA ---------------------------- */
 async function cargarDatos(){
@@ -1092,27 +1100,33 @@ function renderAdmin(){
         <h2 style="margin-bottom:8px;">Panel de administración</h2>
         <p style="color:#6b6c70;font-size:14px;margin-bottom:22px;">Acceso restringido al equipo del portal.</p>
         <div class="form-card">
-          <div class="field full" style="margin-bottom:16px;"><label>Contraseña</label><input type="password" id="adminPass"></div>
+          <div class="field full" style="margin-bottom:16px;"><label>Contraseña</label><input type="password" id="adminPass" autocomplete="off"></div>
           <button class="btn-primary" id="adminEnter" style="width:100%;">Ingresar</button>
           <p id="adminError" style="color:#a33b2b;font-size:13px;margin-top:12px;display:none;">Contraseña incorrecta.</p>
         </div>
       </div>`;
-    document.getElementById('adminEnter').addEventListener('click', ()=>{
+    document.getElementById('adminEnter').addEventListener('click', async ()=>{
+      const btn = document.getElementById('adminEnter');
       const val = document.getElementById('adminPass').value;
-      if(val === ADMIN_PASSWORD){
+      btn.disabled = true;
+      const hashIngresado = await sha256Hex(val);
+      if(hashIngresado === ADMIN_PASSWORD_HASH){
         adminAutenticado = true; intentosAdminFallidos = 0; renderAdmin();
+        return;
+      }
+      intentosAdminFallidos++;
+      const err = document.getElementById('adminError');
+      if(intentosAdminFallidos >= 5){
+        err.textContent = 'Demasiados intentos fallidos. Cerrá y volvé a abrir esta página para reintentar.';
+        err.style.display='block';
+        document.getElementById('adminPass').disabled = true;
+        // btn queda deshabilitado a propósito, no se reactiva
       }else{
-        intentosAdminFallidos++;
-        const err = document.getElementById('adminError');
-        if(intentosAdminFallidos >= 5){
-          err.textContent = 'Demasiados intentos fallidos. Cerrá y volvé a abrir esta página para reintentar.';
-          err.style.display='block';
-          document.getElementById('adminEnter').disabled = true;
-          document.getElementById('adminPass').disabled = true;
-        }else{
-          err.textContent = 'Contraseña incorrecta.';
-          err.style.display='block';
-        }
+        err.textContent = 'Contraseña incorrecta.';
+        err.style.display='block';
+        // Retraso progresivo: dificulta probar contraseñas una tras otra rápidamente.
+        await new Promise(r=>setTimeout(r, intentosAdminFallidos * 800));
+        btn.disabled = false;
       }
     });
     document.getElementById('adminPass').addEventListener('keydown', (e)=>{ if(e.key==='Enter') document.getElementById('adminEnter').click(); });
